@@ -1,0 +1,3106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>MedGuardian AI | Patient Dashboard</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+
+    font-family:
+        Inter,
+        Arial,
+        sans-serif;
+
+    min-height: 100vh;
+
+    background:
+        linear-gradient(
+            135deg,
+            #e0f2fe,
+            #f0fdf4,
+            #eef2ff
+        );
+
+    color: #172033;
+
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #4f46e5,
+            #0891b2
+        );
+
+    color: white;
+
+    padding: 22px 6%;
+
+    box-shadow:
+        0 10px 30px
+        rgba(37, 99, 235, 0.25);
+
+}
+
+
+.header-content {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+}
+
+
+.brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+}
+
+
+.brand-icon {
+
+    width: 48px;
+
+    height: 48px;
+
+    border-radius: 15px;
+
+    background:
+        rgba(255,255,255,0.18);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 26px;
+
+}
+
+
+.brand h1 {
+
+    font-size: 25px;
+
+}
+
+
+.brand p {
+
+    font-size: 12px;
+
+    opacity: 0.85;
+
+}
+
+
+.logout {
+
+    color: white;
+
+    text-decoration: none;
+
+    background:
+        rgba(255,255,255,0.16);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.3);
+
+    padding: 10px 16px;
+
+    border-radius: 12px;
+
+    font-weight: 600;
+
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.container {
+
+    width: 92%;
+
+    max-width: 1400px;
+
+    margin: 28px auto 60px;
+
+}
+
+
+/* =========================================================
+   WELCOME
+========================================================= */
+
+.welcome {
+
+    background: rgba(255,255,255,0.86);
+
+    backdrop-filter: blur(12px);
+
+    border-radius: 22px;
+
+    padding: 25px;
+
+    margin-bottom: 22px;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.9);
+
+    box-shadow:
+        0 12px 35px
+        rgba(15,23,42,0.08);
+
+}
+
+
+.welcome h2 {
+
+    color: #1e3a8a;
+
+    margin-bottom: 6px;
+
+}
+
+
+.welcome p {
+
+    color: #64748b;
+
+}
+
+
+/* =========================================================
+   FEATURE CARDS
+========================================================= */
+
+.features {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 18px;
+
+    margin-bottom: 25px;
+
+}
+
+
+.feature {
+
+    background:
+        rgba(255,255,255,0.85);
+
+    padding: 22px;
+
+    border-radius: 18px;
+
+    text-align: center;
+
+    box-shadow:
+        0 8px 25px
+        rgba(15,23,42,0.07);
+
+    border:
+        1px solid
+        rgba(226,232,240,0.8);
+
+}
+
+
+.feature-icon {
+
+    font-size: 30px;
+
+    margin-bottom: 10px;
+
+}
+
+
+.feature h3 {
+
+    color: #334155;
+
+    margin-bottom: 5px;
+
+}
+
+
+.feature p {
+
+    color: #94a3b8;
+
+    font-size: 13px;
+
+}
+
+
+/* =========================================================
+   GRID
+========================================================= */
+
+.main-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 2fr)
+        minmax(300px, 1fr);
+
+    gap: 22px;
+
+}
+
+
+.card {
+
+    background:
+        rgba(255,255,255,0.9);
+
+    border-radius: 22px;
+
+    padding: 24px;
+
+    margin-bottom: 22px;
+
+    box-shadow:
+        0 12px 35px
+        rgba(15,23,42,0.07);
+
+    border:
+        1px solid
+        rgba(226,232,240,0.8);
+
+}
+
+
+.card-title {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 18px;
+
+}
+
+
+.card-title h2 {
+
+    color: #1e293b;
+
+    font-size: 20px;
+
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+.profile {
+
+    background:
+        linear-gradient(
+            145deg,
+            #eff6ff,
+            #ecfeff
+        );
+
+}
+
+
+.profile-name {
+
+    font-size: 25px;
+
+    font-weight: 800;
+
+    color: #1d4ed8;
+
+    margin-bottom: 15px;
+
+}
+
+
+.profile-row {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    padding: 9px 0;
+
+    border-bottom:
+        1px solid
+        rgba(148,163,184,0.15);
+
+}
+
+
+.profile-row:last-child {
+
+    border-bottom: none;
+
+}
+
+
+.profile-label {
+
+    color: #64748b;
+
+}
+
+
+.profile-value {
+
+    font-weight: 700;
+
+    color: #334155;
+
+}
+
+
+/* =========================================================
+   LANGUAGE
+========================================================= */
+
+.language-buttons {
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-bottom: 18px;
+
+}
+
+
+.lang-btn {
+
+    border: none;
+
+    padding: 10px 18px;
+
+    border-radius: 30px;
+
+    cursor: pointer;
+
+    background: #e2e8f0;
+
+    color: #334155;
+
+    font-weight: 700;
+
+}
+
+
+.lang-btn.active {
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #4f46e5
+        );
+
+    color: white;
+
+}
+
+
+/* =========================================================
+   INPUTS
+========================================================= */
+
+.form-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 16px;
+
+}
+
+
+.form-group {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+
+}
+
+
+.form-group.full {
+
+    grid-column:
+        1 / -1;
+
+}
+
+
+label {
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    color: #475569;
+
+}
+
+
+input,
+select,
+textarea {
+
+    width: 100%;
+
+    padding: 13px 14px;
+
+    border-radius: 12px;
+
+    border:
+        1px solid
+        #dbe3ef;
+
+    background: #f8fafc;
+
+    outline: none;
+
+    font-size: 14px;
+
+    transition: 0.2s;
+
+}
+
+
+input:focus,
+select:focus,
+textarea:focus {
+
+    border-color: #3b82f6;
+
+    background: white;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(59,130,246,0.1);
+
+}
+
+
+textarea {
+
+    min-height: 150px;
+
+    resize: vertical;
+
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.buttons {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-top: 18px;
+
+}
+
+
+button {
+
+    border: none;
+
+    cursor: pointer;
+
+    font-weight: 700;
+
+}
+
+
+.btn {
+
+    padding: 12px 17px;
+
+    border-radius: 12px;
+
+    color: white;
+
+    transition: 0.2s;
+
+}
+
+
+.btn:hover {
+
+    transform:
+        translateY(-2px);
+
+}
+
+
+.btn-primary {
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #4f46e5
+        );
+
+}
+
+
+.btn-green {
+
+    background:
+        linear-gradient(
+            135deg,
+            #059669,
+            #0d9488
+        );
+
+}
+
+
+.btn-red {
+
+    background:
+        linear-gradient(
+            135deg,
+            #ef4444,
+            #dc2626
+        );
+
+}
+
+
+.btn-purple {
+
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #9333ea
+        );
+
+}
+
+
+.btn-orange {
+
+    background:
+        linear-gradient(
+            135deg,
+            #f97316,
+            #ea580c
+        );
+
+}
+
+
+/* =========================================================
+   ANALYSIS
+========================================================= */
+
+.analysis {
+
+    margin-top: 22px;
+
+    display: none;
+
+}
+
+
+.analysis.show {
+
+    display: block;
+
+}
+
+
+.analysis-content {
+
+    line-height: 1.75;
+
+    color: #334155;
+
+    white-space: pre-wrap;
+
+}
+
+
+.loading {
+
+    display: none;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    background: #eff6ff;
+
+    color: #1d4ed8;
+
+    margin-top: 15px;
+
+    font-weight: 700;
+
+}
+
+
+.loading.show {
+
+    display: block;
+
+}
+
+
+/* =========================================================
+   RISK
+========================================================= */
+
+.risk-panel {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 20px;
+
+    align-items: center;
+
+}
+
+
+.risk-box {
+
+    text-align: center;
+
+    padding: 25px;
+
+    border-radius: 18px;
+
+}
+
+
+.risk-box.low {
+
+    background:
+        #ecfdf5;
+
+    color:
+        #047857;
+
+}
+
+
+.risk-box.medium {
+
+    background:
+        #fffbeb;
+
+    color:
+        #b45309;
+
+}
+
+
+.risk-box.high {
+
+    background:
+        #fef2f2;
+
+    color:
+        #b91c1c;
+
+}
+
+
+.risk-level {
+
+    font-size: 28px;
+
+    font-weight: 900;
+
+    margin-top: 8px;
+
+}
+
+
+/* =========================================================
+   PIE CHART
+========================================================= */
+
+.chart-wrapper {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+}
+
+
+#riskChart {
+
+    width: 220px;
+
+    height: 220px;
+
+}
+
+
+/* =========================================================
+   SPECIALIST
+========================================================= */
+
+.specialist {
+
+    padding: 18px;
+
+    border-radius: 16px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef2ff,
+            #ecfeff
+        );
+
+    border-left:
+        5px solid
+        #4f46e5;
+
+}
+
+
+.specialist strong {
+
+    color: #3730a3;
+
+}
+
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+.history-item {
+
+    padding: 16px;
+
+    border-radius: 15px;
+
+    background:
+        #f8fafc;
+
+    margin-bottom: 12px;
+
+    border:
+        1px solid
+        #e2e8f0;
+
+}
+
+
+.history-top {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 8px;
+
+}
+
+
+.history-date {
+
+    color: #94a3b8;
+
+    font-size: 12px;
+
+}
+
+
+.badge {
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+}
+
+
+.badge.low {
+
+    background: #dcfce7;
+
+    color: #166534;
+
+}
+
+
+.badge.medium {
+
+    background: #fef3c7;
+
+    color: #92400e;
+
+}
+
+
+.badge.high {
+
+    background: #fee2e2;
+
+    color: #991b1b;
+
+}
+
+
+/* =========================================================
+   BMI
+========================================================= */
+
+.bmi-result {
+
+    margin-top: 15px;
+
+    padding: 16px;
+
+    border-radius: 15px;
+
+    background:
+        #eff6ff;
+
+    display: none;
+
+}
+
+
+.bmi-number {
+
+    font-size: 32px;
+
+    font-weight: 900;
+
+    color: #2563eb;
+
+}
+
+
+/* =========================================================
+   REMINDER
+========================================================= */
+
+.reminder-item {
+
+    background: #f8fafc;
+
+    padding: 12px;
+
+    border-radius: 12px;
+
+    margin-top: 10px;
+
+}
+
+
+.reminder-item strong {
+
+    color: #334155;
+
+}
+
+
+.reminder-item small {
+
+    display: block;
+
+    color: #94a3b8;
+
+    margin-top: 4px;
+
+}
+
+
+/* =========================================================
+   HOSPITAL
+========================================================= */
+
+.hospital-card {
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff1f2,
+            #fef2f2
+        );
+
+    border-left:
+        5px solid
+        #ef4444;
+
+}
+
+
+.hospital-btn {
+
+    width: 100%;
+
+    padding: 13px;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ef4444,
+            #dc2626
+        );
+
+    color: white;
+
+    margin-top: 12px;
+
+    font-weight: 800;
+
+}
+
+
+/* =========================================================
+   DISCLAIMER
+========================================================= */
+
+.disclaimer {
+
+    background:
+        #fff7ed;
+
+    border-left:
+        5px solid
+        #f97316;
+
+    color:
+        #7c2d12;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer {
+
+    text-align: center;
+
+    padding: 30px;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width: 1000px) {
+
+    .features {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+    .main-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+}
+
+
+@media(max-width: 650px) {
+
+    .header-content {
+
+        flex-direction:
+            column;
+
+        align-items:
+            flex-start;
+
+    }
+
+    .features {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+    .form-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+    .risk-panel {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+    .container {
+
+        width: 95%;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- ======================================================
+     HEADER
+======================================================= -->
+
+<header class="header">
+
+    <div class="header-content">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                🛡️
+            </div>
+
+            <div>
+
+                <h1>
+                    MedGuardian AI
+                </h1>
+
+                <p>
+                    Smart Healthcare Assistant • Tamil + English
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <a
+            href="/logout"
+            class="logout"
+        >
+            Logout
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+
+<!-- ======================================================
+     WELCOME
+======================================================= -->
+
+<section class="welcome">
+
+    <h2>
+        👋 Welcome, {{ user_name }}
+    </h2>
+
+    <p>
+        Your personal AI-assisted healthcare dashboard
+        is ready.
+    </p>
+
+</section>
+
+
+<!-- ======================================================
+     FEATURES
+======================================================= -->
+
+<section class="features">
+
+    <div class="feature">
+
+        <div class="feature-icon">
+            🤖
+        </div>
+
+        <h3>
+            AI Analysis
+        </h3>
+
+        <p>
+            Gemini-powered health information
+        </p>
+
+    </div>
+
+
+    <div class="feature">
+
+        <div class="feature-icon">
+            📊
+        </div>
+
+        <h3>
+            Smart Triage
+        </h3>
+
+        <p>
+            Risk-level assessment
+        </p>
+
+    </div>
+
+
+    <div class="feature">
+
+        <div class="feature-icon">
+            👨‍⚕️
+        </div>
+
+        <h3>
+            Specialist
+        </h3>
+
+        <p>
+            AI-assisted recommendation
+        </p>
+
+    </div>
+
+
+    <div class="feature">
+
+        <div class="feature-icon">
+            📄
+        </div>
+
+        <h3>
+            Health Report
+        </h3>
+
+        <p>
+            Download consultation report
+        </p>
+
+    </div>
+
+</section>
+
+
+<div class="main-grid">
+
+
+<!-- ======================================================
+     LEFT
+======================================================= -->
+
+<div>
+
+
+<section class="card">
+
+    <div class="card-title">
+
+        <h2>
+            🩺 Patient Health Assessment
+        </h2>
+
+    </div>
+
+
+    <div class="language-buttons">
+
+        <button
+            class="lang-btn active"
+            onclick="setLanguage('en-IN', this)"
+        >
+            🇬🇧 English
+        </button>
+
+        <button
+            class="lang-btn"
+            onclick="setLanguage('ta-IN', this)"
+        >
+            🇮🇳 தமிழ்
+        </button>
+
+    </div>
+
+
+    <div class="form-grid">
+
+
+        <div class="form-group">
+
+            <label>
+                Age
+            </label>
+
+            <input
+                id="age"
+                type="number"
+                value="{{ patient['age'] if patient and patient['age'] else '' }}"
+                placeholder="Example: 21"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Gender
+            </label>
+
+            <select id="gender">
+
+                <option value="">
+                    Select gender
+                </option>
+
+                <option value="Male"
+                {% if patient and patient['gender'] == 'Male' %}selected{% endif %}>
+                    Male
+                </option>
+
+                <option value="Female"
+                {% if patient and patient['gender'] == 'Female' %}selected{% endif %}>
+                    Female
+                </option>
+
+                <option value="Other">
+                    Other
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                🌡️ Temperature (°F)
+            </label>
+
+            <input
+                id="temperature"
+                type="number"
+                step="0.1"
+                placeholder="Example: 102"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                ⏱️ Duration
+            </label>
+
+            <input
+                id="duration"
+                type="text"
+                placeholder="Example: 3 days"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                ⚠️ Severity
+            </label>
+
+            <select id="severity">
+
+                <option value="">
+                    Select severity
+                </option>
+
+                <option value="Mild">
+                    Mild
+                </option>
+
+                <option value="Moderate">
+                    Moderate
+                </option>
+
+                <option value="Severe">
+                    Severe
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                🔎 Main Symptom
+            </label>
+
+            <input
+                id="main_symptom"
+                type="text"
+                placeholder="Example: Fever"
+            >
+
+        </div>
+
+
+        <div class="form-group full">
+
+            <label>
+                📝 Describe Your Symptoms
+            </label>
+
+            <textarea
+                id="symptoms"
+                placeholder="Example: I have fever, throat pain and leg pain for 3 days..."
+            ></textarea>
+
+        </div>
+
+    </div>
+
+
+    <div class="buttons">
+
+        <button
+            class="btn btn-purple"
+            onclick="startVoice()"
+        >
+            🎤 Speak
+        </button>
+
+
+        <button
+            class="btn btn-primary"
+            id="askBtn"
+            onclick="askAI()"
+        >
+            🤖 Ask AI
+        </button>
+
+
+        <button
+            class="btn btn-green"
+            onclick="readAnswer()"
+        >
+            🔊 Read Answer
+        </button>
+
+
+        <button
+            class="btn btn-orange"
+            onclick="startVoiceChat()"
+        >
+            🗣️ Voice Chat
+        </button>
+
+
+        <button
+            class="btn btn-red"
+            onclick="stopVoice()"
+        >
+            ⛔ Stop Voice
+        </button>
+
+
+        <button
+            class="btn btn-red"
+            onclick="clearForm()"
+        >
+            ✕ Clear
+        </button>
+
+    </div>
+
+
+    <div
+        class="loading"
+        id="loading"
+    >
+        ⏳ MedGuardian AI is analysing your information...
+    </div>
+
+
+</section>
+
+
+<!-- ======================================================
+     ANALYSIS
+======================================================= -->
+
+<section
+    class="card analysis"
+    id="analysis"
+>
+
+    <div class="card-title">
+
+        <h2>
+            🧠 AI Analysis
+        </h2>
+
+    </div>
+
+
+    <div
+        class="analysis-content"
+        id="analysisText"
+    ></div>
+
+
+    <br>
+
+
+    <div
+        class="risk-panel"
+        id="riskPanel"
+    >
+
+        <div
+            class="risk-box medium"
+            id="riskBox"
+        >
+
+            <div>
+                Risk Level
+            </div>
+
+            <div
+                class="risk-level"
+                id="riskLevel"
+            >
+                MEDIUM
+            </div>
+
+        </div>
+
+
+        <div class="chart-wrapper">
+
+            <canvas
+                id="riskChart"
+                width="220"
+                height="220"
+            ></canvas>
+
+        </div>
+
+    </div>
+
+
+    <br>
+
+
+    <div
+        class="specialist"
+        id="specialistBox"
+    >
+
+        👨‍⚕️
+
+        <strong>
+            Recommended Specialist:
+        </strong>
+
+        <span id="specialist">
+            General Physician
+        </span>
+
+    </div>
+
+
+    <br>
+
+
+    <div class="buttons">
+
+        <a
+            href="/download-report"
+            class="btn btn-green"
+        >
+            📄 Download Health Report
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- ======================================================
+     HISTORY
+======================================================= -->
+
+<section class="card">
+
+    <div class="card-title">
+
+        <h2>
+            🕘 Recent Consultations
+        </h2>
+
+        <button
+            class="btn btn-primary"
+            onclick="loadHistory()"
+        >
+            Refresh
+        </button>
+
+    </div>
+
+
+    <div id="historyList">
+
+        {% if consultations %}
+
+            {% for item in consultations %}
+
+                <div class="history-item">
+
+                    <div class="history-top">
+
+                        <strong>
+                            {{ item['question'][:100] }}
+                        </strong>
+
+                        <span
+                            class="badge {{ item['risk_level']|lower }}"
+                        >
+                            {{ item['risk_level'] }}
+                        </span>
+
+                    </div>
+
+                    <div class="history-date">
+
+                        {{ item['created_at'] }}
+
+                        •
+
+                        {{ item['specialist'] }}
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>
+                No consultations yet.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+
+</div>
+
+
+<!-- ======================================================
+     RIGHT SIDEBAR
+======================================================= -->
+
+<div>
+
+
+<!-- PROFILE -->
+
+<section class="card profile">
+
+    <div class="card-title">
+
+        <h2>
+            👤 Patient Profile
+        </h2>
+
+    </div>
+
+
+    <div class="profile-name">
+
+        {{ patient['name'] if patient else user_name }}
+
+    </div>
+
+
+    <div class="profile-row">
+
+        <span class="profile-label">
+            Email
+        </span>
+
+        <span class="profile-value">
+
+            {{ patient['email'] if patient else '-' }}
+
+        </span>
+
+    </div>
+
+
+    <div class="profile-row">
+
+        <span class="profile-label">
+            Age
+        </span>
+
+        <span class="profile-value">
+
+            {{ patient['age'] if patient and patient['age'] else '-' }}
+
+        </span>
+
+    </div>
+
+
+    <div class="profile-row">
+
+        <span class="profile-label">
+            Gender
+        </span>
+
+        <span class="profile-value">
+
+            {{ patient['gender'] if patient and patient['gender'] else '-' }}
+
+        </span>
+
+    </div>
+
+
+    <div class="profile-row">
+
+        <span class="profile-label">
+            Status
+        </span>
+
+        <span class="profile-value">
+            🟢 Active
+        </span>
+
+    </div>
+
+</section>
+
+
+<!-- BMI -->
+
+<section class="card">
+
+    <div class="card-title">
+
+        <h2>
+            ⚖️ BMI Calculator
+        </h2>
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Weight (kg)
+        </label>
+
+        <input
+            id="weight"
+            type="number"
+            placeholder="Example: 65"
+        >
+
+    </div>
+
+
+    <br>
+
+
+    <div class="form-group">
+
+        <label>
+            Height (cm)
+        </label>
+
+        <input
+            id="height"
+            type="number"
+            placeholder="Example: 170"
+        >
+
+    </div>
+
+
+    <br>
+
+
+    <button
+        class="btn btn-primary"
+        style="width:100%;"
+        onclick="calculateBMI()"
+    >
+        Calculate BMI
+    </button>
+
+
+    <div
+        class="bmi-result"
+        id="bmiResult"
+    >
+
+        <div>
+            Your BMI
+        </div>
+
+        <div
+            class="bmi-number"
+            id="bmiNumber"
+        >
+            0
+        </div>
+
+        <strong id="bmiCategory">
+            -
+        </strong>
+
+    </div>
+
+</section>
+
+
+<!-- MEDICINE REMINDER -->
+
+<section class="card">
+
+    <div class="card-title">
+
+        <h2>
+            💊 Medicine Reminder
+        </h2>
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Medicine Name
+        </label>
+
+        <input
+            id="medicineName"
+            type="text"
+            placeholder="Medicine name"
+        >
+
+    </div>
+
+
+    <br>
+
+
+    <div class="form-group">
+
+        <label>
+            Reminder Time
+        </label>
+
+        <input
+            id="reminderTime"
+            type="time"
+        >
+
+    </div>
+
+
+    <br>
+
+
+    <button
+        class="btn btn-purple"
+        style="width:100%;"
+        onclick="setReminder()"
+    >
+        ⏰ Set Reminder
+    </button>
+
+
+    <div id="reminderList">
+
+        {% for reminder in reminders %}
+
+            <div class="reminder-item">
+
+                <strong>
+                    💊 {{ reminder['medicine_name'] }}
+                </strong>
+
+                <small>
+                    ⏰ {{ reminder['reminder_time'] }}
+                </small>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<!-- HOSPITAL -->
+
+<section class="card hospital-card">
+
+    <div class="card-title">
+
+        <h2>
+            🏥 Emergency Hospital
+        </h2>
+
+    </div>
+
+
+    <p>
+        Find nearby hospitals using Google Maps.
+    </p>
+
+
+    <button
+        class="hospital-btn"
+        onclick="findHospital()"
+    >
+        🏥 Find Nearby Hospital
+    </button>
+
+</section>
+
+
+<!-- DISCLAIMER -->
+
+<section class="card disclaimer">
+
+    <strong>
+        ⚠️ Medical Disclaimer
+    </strong>
+
+    <br><br>
+
+    MedGuardian AI provides general healthcare
+    information for educational purposes only.
+
+    It does not provide a confirmed diagnosis
+    and does not replace a qualified healthcare
+    professional.
+
+    <br><br>
+
+    If symptoms are severe or worsening,
+    seek appropriate medical care.
+
+</section>
+
+
+</div>
+
+</div>
+
+
+</main>
+
+
+<footer class="footer">
+
+    MedGuardian AI © 2026
+
+    <br>
+
+    Smart • Safe • Educational Healthcare Assistant
+
+</footer>
+
+
+<script>
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+let selectedLanguage = "en-IN";
+
+let lastAnswer = "";
+
+let recognition = null;
+
+
+/* =========================================================
+   LANGUAGE
+========================================================= */
+
+function setLanguage(language, button) {
+
+    selectedLanguage = language;
+
+    document
+        .querySelectorAll(".lang-btn")
+        .forEach(
+            btn => btn.classList.remove("active")
+        );
+
+    button.classList.add("active");
+
+}
+
+
+/* =========================================================
+   ASK AI
+========================================================= */
+
+async function askAI() {
+
+    const symptoms =
+        document
+            .getElementById("symptoms")
+            .value
+            .trim();
+
+    if (!symptoms) {
+
+        alert(
+            "Please enter your symptoms first."
+        );
+
+        return;
+
+    }
+
+
+    const data = {
+
+        age:
+            document
+                .getElementById("age")
+                .value,
+
+        gender:
+            document
+                .getElementById("gender")
+                .value,
+
+        temperature:
+            document
+                .getElementById("temperature")
+                .value,
+
+        duration:
+            document
+                .getElementById("duration")
+                .value,
+
+        severity:
+            document
+                .getElementById("severity")
+                .value,
+
+        main_symptom:
+            document
+                .getElementById("main_symptom")
+                .value,
+
+        symptoms:
+            symptoms,
+
+        language:
+            selectedLanguage
+
+    };
+
+
+    document
+        .getElementById("loading")
+        .classList.add("show");
+
+
+    document
+        .getElementById("askBtn")
+        .disabled = true;
+
+
+    document
+        .getElementById("askBtn")
+        .innerText =
+            "⏳ Analysing...";
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/ask-ai",
+                {
+
+                    method:
+                        "POST",
+
+                    headers:
+                        {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                    body:
+                        JSON.stringify(data)
+
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (!result.success) {
+
+            alert(
+                result.error ||
+                "Something went wrong."
+            );
+
+            return;
+
+        }
+
+
+        lastAnswer =
+            result.result || "";
+
+
+        document
+            .getElementById("analysisText")
+            .innerText =
+                lastAnswer;
+
+
+        document
+            .getElementById("analysis")
+            .classList.add("show");
+
+
+        updateRisk(
+            result.risk
+        );
+
+
+        document
+            .getElementById("specialist")
+            .innerText =
+                result.specialist;
+
+
+        loadHistory();
+
+
+        window.scrollTo({
+
+            top:
+                document
+                    .getElementById("analysis")
+                    .offsetTop - 20,
+
+            behavior:
+                "smooth"
+
+        });
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to connect to the server."
+        );
+
+    } finally {
+
+        document
+            .getElementById("loading")
+            .classList.remove("show");
+
+
+        document
+            .getElementById("askBtn")
+            .disabled = false;
+
+
+        document
+            .getElementById("askBtn")
+            .innerText =
+                "🤖 Ask AI";
+
+    }
+
+}
+
+
+/* =========================================================
+   RISK + PIE CHART
+========================================================= */
+
+function updateRisk(risk) {
+
+    const riskLevel =
+        document
+            .getElementById("riskLevel");
+
+
+    const riskBox =
+        document
+            .getElementById("riskBox");
+
+
+    risk =
+        (risk || "MEDIUM")
+            .toUpperCase();
+
+
+    riskLevel.innerText =
+        risk;
+
+
+    riskBox.className =
+        "risk-box";
+
+
+    if (risk === "LOW") {
+
+        riskBox.classList.add("low");
+
+    }
+
+    else if (risk === "HIGH") {
+
+        riskBox.classList.add("high");
+
+    }
+
+    else {
+
+        riskBox.classList.add("medium");
+
+    }
+
+
+    drawRiskChart(risk);
+
+}
+
+
+/* =========================================================
+   PIE CHART
+========================================================= */
+
+function drawRiskChart(risk) {
+
+    const canvas =
+        document
+            .getElementById("riskChart");
+
+
+    const ctx =
+        canvas.getContext("2d");
+
+
+    const centerX =
+        canvas.width / 2;
+
+
+    const centerY =
+        canvas.height / 2;
+
+
+    const radius = 85;
+
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    let values;
+
+
+    if (risk === "LOW") {
+
+        values = [
+            75,
+            15,
+            10
+        ];
+
+    }
+
+    else if (risk === "HIGH") {
+
+        values = [
+            10,
+            15,
+            75
+        ];
+
+    }
+
+    else {
+
+        values = [
+            15,
+            70,
+            15
+        ];
+
+    }
+
+
+    const colors = [
+
+        "#22c55e",
+        "#f59e0b",
+        "#ef4444"
+
+    ];
+
+
+    let startAngle =
+        -Math.PI / 2;
+
+
+    values.forEach(
+        (value, index) => {
+
+            const slice =
+                (
+                    value / 100
+                ) *
+                Math.PI *
+                2;
+
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                centerX,
+                centerY
+            );
+
+            ctx.arc(
+
+                centerX,
+                centerY,
+
+                radius,
+
+                startAngle,
+
+                startAngle + slice
+
+            );
+
+            ctx.closePath();
+
+            ctx.fillStyle =
+                colors[index];
+
+            ctx.fill();
+
+            startAngle += slice;
+
+        }
+    );
+
+
+    // CENTER CIRCLE
+
+    ctx.beginPath();
+
+    ctx.arc(
+        centerX,
+        centerY,
+        48,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fillStyle =
+        "#ffffff";
+
+    ctx.fill();
+
+
+    ctx.font =
+        "bold 16px Arial";
+
+    ctx.fillStyle =
+        "#334155";
+
+    ctx.textAlign =
+        "center";
+
+    ctx.textBaseline =
+        "middle";
+
+    ctx.fillText(
+        risk,
+        centerX,
+        centerY
+    );
+
+}
+
+
+/* =========================================================
+   BMI
+========================================================= */
+
+async function calculateBMI() {
+
+    const weight =
+        parseFloat(
+            document
+                .getElementById("weight")
+                .value
+        );
+
+
+    const height =
+        parseFloat(
+            document
+                .getElementById("height")
+                .value
+        );
+
+
+    if (!weight || !height) {
+
+        alert(
+            "Enter weight and height."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/bmi",
+                {
+
+                    method:
+                        "POST",
+
+                    headers:
+                        {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                    body:
+                        JSON.stringify({
+
+                            weight:
+                                weight,
+
+                            height:
+                                height
+
+                        })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!data.success) {
+
+            alert(data.error);
+
+            return;
+
+        }
+
+
+        document
+            .getElementById("bmiResult")
+            .style.display =
+                "block";
+
+
+        document
+            .getElementById("bmiNumber")
+            .innerText =
+                data.bmi;
+
+
+        document
+            .getElementById("bmiCategory")
+            .innerText =
+                data.category;
+
+
+    } catch (error) {
+
+        alert(
+            "BMI calculation failed."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   MEDICINE REMINDER
+========================================================= */
+
+async function setReminder() {
+
+    const medicine =
+        document
+            .getElementById("medicineName")
+            .value
+            .trim();
+
+
+    const time =
+        document
+            .getElementById("reminderTime")
+            .value;
+
+
+    if (!medicine) {
+
+        alert(
+            "Enter medicine name."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/medicine-reminder",
+                {
+
+                    method:
+                        "POST",
+
+                    headers:
+                        {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                    body:
+                        JSON.stringify({
+
+                            medicine_name:
+                                medicine,
+
+                            reminder_time:
+                                time
+
+                        })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!data.success) {
+
+            alert(data.error);
+
+            return;
+
+        }
+
+
+        const list =
+            document
+                .getElementById("reminderList");
+
+
+        const item =
+            document.createElement("div");
+
+
+        item.className =
+            "reminder-item";
+
+
+        item.innerHTML = `
+
+            <strong>
+                💊 ${medicine}
+            </strong>
+
+            <small>
+                ⏰ ${time || "Time not specified"}
+            </small>
+
+        `;
+
+
+        list.prepend(item);
+
+
+        document
+            .getElementById("medicineName")
+            .value = "";
+
+
+        document
+            .getElementById("reminderTime")
+            .value = "";
+
+
+        alert(
+            "Reminder saved successfully."
+        );
+
+
+    } catch (error) {
+
+        alert(
+            "Unable to save reminder."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+async function loadHistory() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/history"
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!data.success) {
+
+            return;
+
+        }
+
+
+        const list =
+            document
+                .getElementById("historyList");
+
+
+        if (!data.history.length) {
+
+            list.innerHTML =
+                "<p>No consultations yet.</p>";
+
+            return;
+
+        }
+
+
+        list.innerHTML = "";
+
+
+        data.history.forEach(
+            item => {
+
+                const div =
+                    document
+                        .createElement("div");
+
+
+                div.className =
+                    "history-item";
+
+
+                const risk =
+                    (
+                        item.risk_level ||
+                        "MEDIUM"
+                    ).toLowerCase();
+
+
+                div.innerHTML = `
+
+                    <div class="history-top">
+
+                        <strong>
+                            ${(item.question || "")
+                                .substring(0, 100)}
+                        </strong>
+
+                        <span class="badge ${risk}">
+                            ${item.risk_level}
+                        </span>
+
+                    </div>
+
+                    <div class="history-date">
+
+                        ${item.created_at}
+
+                        •
+
+                        ${item.specialist}
+
+                    </div>
+
+                `;
+
+
+                list.appendChild(div);
+
+            }
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "History error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   VOICE INPUT
+========================================================= */
+
+function startVoice() {
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+
+    if (!SpeechRecognition) {
+
+        alert(
+            "Voice recognition is not supported in this browser."
+        );
+
+        return;
+
+    }
+
+
+    recognition =
+        new SpeechRecognition();
+
+
+    recognition.lang =
+        selectedLanguage === "ta-IN"
+            ? "ta-IN"
+            : "en-IN";
+
+
+    recognition.continuous =
+        false;
+
+
+    recognition.interimResults =
+        false;
+
+
+    recognition.onresult =
+        function(event) {
+
+            const text =
+                event.results[0][0].transcript;
+
+
+            document
+                .getElementById("symptoms")
+                .value =
+                    text;
+
+        };
+
+
+    recognition.onerror =
+        function(event) {
+
+            console.error(
+                event.error
+            );
+
+        };
+
+
+    recognition.start();
+
+}
+
+
+/* =========================================================
+   VOICE CHAT
+========================================================= */
+
+function startVoiceChat() {
+
+    startVoice();
+
+}
+
+
+/* =========================================================
+   STOP VOICE
+========================================================= */
+
+function stopVoice() {
+
+    if (recognition) {
+
+        recognition.stop();
+
+        recognition = null;
+
+    }
+
+
+    if (
+        window.speechSynthesis
+    ) {
+
+        window.speechSynthesis.cancel();
+
+    }
+
+}
+
+
+/* =========================================================
+   READ ANSWER
+========================================================= */
+
+function readAnswer() {
+
+    if (!lastAnswer) {
+
+        alert(
+            "Please analyse your symptoms first."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !window.speechSynthesis
+    ) {
+
+        alert(
+            "Text-to-speech is not supported."
+        );
+
+        return;
+
+    }
+
+
+    window.speechSynthesis.cancel();
+
+
+    const speech =
+        new SpeechSynthesisUtterance(
+            lastAnswer
+        );
+
+
+    speech.lang =
+        selectedLanguage === "ta-IN"
+            ? "ta-IN"
+            : "en-IN";
+
+
+    speech.rate =
+        0.9;
+
+
+    window.speechSynthesis.speak(
+        speech
+    );
+
+}
+
+
+/* =========================================================
+   CLEAR
+========================================================= */
+
+function clearForm() {
+
+    document
+        .getElementById("temperature")
+        .value = "";
+
+
+    document
+        .getElementById("duration")
+        .value = "";
+
+
+    document
+        .getElementById("severity")
+        .value = "";
+
+
+    document
+        .getElementById("main_symptom")
+        .value = "";
+
+
+    document
+        .getElementById("symptoms")
+        .value = "";
+
+
+    document
+        .getElementById("analysis")
+        .classList.remove("show");
+
+
+    lastAnswer = "";
+
+
+    stopVoice();
+
+}
+
+
+/* =========================================================
+   HOSPITAL FINDER
+========================================================= */
+
+function findHospital() {
+
+    if (
+        navigator.geolocation
+    ) {
+
+        navigator.geolocation.getCurrentPosition(
+
+            function(position) {
+
+                const lat =
+                    position.coords.latitude;
+
+                const lng =
+                    position.coords.longitude;
+
+
+                const url =
+                    "https://www.google.com/maps/search/?api=1&query=" +
+                    encodeURIComponent(
+                        "hospital near " +
+                        lat +
+                        "," +
+                        lng
+                    );
+
+
+                window.open(
+                    url,
+                    "_blank"
+                );
+
+            },
+
+            function() {
+
+                window.open(
+
+                    "https://www.google.com/maps/search/?api=1&query=emergency+hospital+near+me",
+
+                    "_blank"
+
+                );
+
+            }
+
+        );
+
+    }
+
+    else {
+
+        window.open(
+
+            "https://www.google.com/maps/search/?api=1&query=emergency+hospital+near+me",
+
+            "_blank"
+
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        drawRiskChart("MEDIUM");
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>

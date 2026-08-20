@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>MedGuardian AI | Login</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+
+    min-height:100vh;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:
+        linear-gradient(
+            135deg,
+            #dbeafe 0%,
+            #eef2ff 45%,
+            #f5f3ff 100%
+        );
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:20px;
+
+}
+
+
+/* =====================================================
+   MAIN CONTAINER
+===================================================== */
+
+.container{
+
+    width:100%;
+
+    max-width:1000px;
+
+    min-height:600px;
+
+    background:white;
+
+    border-radius:28px;
+
+    overflow:hidden;
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    box-shadow:
+        0 25px 70px
+        rgba(30,64,175,.18);
+
+}
+
+
+/* =====================================================
+   LEFT SIDE
+===================================================== */
+
+.left-panel{
+
+    background:
+        linear-gradient(
+            145deg,
+            #1d4ed8,
+            #4f46e5,
+            #7c3aed
+        );
+
+    color:white;
+
+    padding:50px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+
+.left-panel::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:260px;
+
+    height:260px;
+
+    border-radius:50%;
+
+    background:
+        rgba(255,255,255,.08);
+
+    top:-80px;
+
+    right:-80px;
+
+}
+
+
+.left-panel::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:220px;
+
+    height:220px;
+
+    border-radius:50%;
+
+    background:
+        rgba(255,255,255,.06);
+
+    bottom:-80px;
+
+    left:-70px;
+
+}
+
+
+.logo{
+
+    position:relative;
+
+    z-index:2;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    margin-bottom:35px;
+
+}
+
+
+.logo-icon{
+
+    width:58px;
+
+    height:58px;
+
+    border-radius:17px;
+
+    background:
+        rgba(255,255,255,.18);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:30px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.25);
+
+}
+
+
+.logo-text{
+
+    font-size:26px;
+
+    font-weight:800;
+
+}
+
+
+.logo-sub{
+
+    font-size:11px;
+
+    margin-top:4px;
+
+    opacity:.85;
+
+}
+
+
+.left-content{
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+
+.left-content h1{
+
+    font-size:36px;
+
+    line-height:1.15;
+
+    margin-bottom:18px;
+
+}
+
+
+.left-content p{
+
+    font-size:14px;
+
+    line-height:1.8;
+
+    opacity:.9;
+
+    margin-bottom:28px;
+
+}
+
+
+.feature{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    margin:15px 0;
+
+    font-size:13px;
+
+}
+
+
+.feature-icon{
+
+    width:36px;
+
+    height:36px;
+
+    border-radius:10px;
+
+    background:
+        rgba(255,255,255,.15);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+
+/* =====================================================
+   RIGHT PANEL
+===================================================== */
+
+.right-panel{
+
+    padding:50px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+
+.login-box{
+
+    width:100%;
+
+    max-width:390px;
+
+}
+
+
+.login-title{
+
+    font-size:29px;
+
+    color:#172554;
+
+    font-weight:800;
+
+    margin-bottom:8px;
+
+}
+
+
+.login-subtitle{
+
+    color:#64748b;
+
+    font-size:13px;
+
+    line-height:1.6;
+
+    margin-bottom:28px;
+
+}
+
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+.error-box{
+
+    background:#fff1f2;
+
+    color:#991b1b;
+
+    border-left:
+        5px solid #ef4444;
+
+    padding:13px 15px;
+
+    border-radius:10px;
+
+    font-size:13px;
+
+    margin-bottom:18px;
+
+}
+
+
+/* =====================================================
+   FORM
+===================================================== */
+
+.form-group{
+
+    margin-bottom:18px;
+
+}
+
+
+.form-group label{
+
+    display:block;
+
+    color:#334155;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    margin-bottom:8px;
+
+}
+
+
+.input-wrapper{
+
+    position:relative;
+
+}
+
+
+.input-icon{
+
+    position:absolute;
+
+    left:13px;
+
+    top:50%;
+
+    transform:
+        translateY(-50%);
+
+    font-size:16px;
+
+}
+
+
+.form-group input{
+
+    width:100%;
+
+    padding:
+        13px
+        13px
+        13px
+        43px;
+
+    border:
+        1px solid #cbd5e1;
+
+    border-radius:11px;
+
+    outline:none;
+
+    font-size:14px;
+
+    background:#f8fafc;
+
+    color:#1e293b;
+
+    transition:.2s;
+
+}
+
+
+.form-group input:focus{
+
+    border-color:#4f46e5;
+
+    background:white;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(79,70,229,.08);
+
+}
+
+
+/* =====================================================
+   LOGIN BUTTON
+===================================================== */
+
+.login-button{
+
+    width:100%;
+
+    border:none;
+
+    padding:14px;
+
+    border-radius:11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #4f46e5
+        );
+
+    color:white;
+
+    font-size:14px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    margin-top:5px;
+
+    box-shadow:
+        0 8px 20px
+        rgba(37,99,235,.22);
+
+    transition:.2s;
+
+}
+
+
+.login-button:hover{
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 12px 25px
+        rgba(37,99,235,.3);
+
+}
+
+
+.login-button:active{
+
+    transform:
+        translateY(0);
+
+}
+
+
+/* =====================================================
+   DEMO ACCOUNT
+===================================================== */
+
+.demo-box{
+
+    margin-top:20px;
+
+    padding:14px;
+
+    border-radius:12px;
+
+    background:#eff6ff;
+
+    border:
+        1px solid #bfdbfe;
+
+    color:#1e40af;
+
+    font-size:12px;
+
+    line-height:1.7;
+
+}
+
+
+.demo-title{
+
+    font-weight:800;
+
+    margin-bottom:4px;
+
+}
+
+
+.demo-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:10px;
+
+}
+
+
+.demo-value{
+
+    font-weight:bold;
+
+    color:#1d4ed8;
+
+}
+
+
+/* =====================================================
+   SECURITY
+===================================================== */
+
+.security{
+
+    margin-top:20px;
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:6px;
+
+    color:#64748b;
+
+    font-size:11px;
+
+    text-align:center;
+
+}
+
+
+/* =====================================================
+   DISCLAIMER
+===================================================== */
+
+.disclaimer{
+
+    margin-top:18px;
+
+    padding:12px;
+
+    background:#fff7ed;
+
+    border-left:
+        4px solid #f97316;
+
+    border-radius:8px;
+
+    color:#9a3412;
+
+    font-size:10px;
+
+    line-height:1.6;
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:750px){
+
+    body{
+
+        padding:10px;
+
+    }
+
+    .container{
+
+        grid-template-columns:1fr;
+
+        min-height:auto;
+
+    }
+
+    .left-panel{
+
+        padding:35px 25px;
+
+    }
+
+    .left-content h1{
+
+        font-size:28px;
+
+    }
+
+    .left-content p{
+
+        font-size:13px;
+
+    }
+
+    .right-panel{
+
+        padding:35px 25px;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<!-- ===================================================
+     LEFT PANEL
+=================================================== -->
+
+<section class="left-panel">
+
+
+<div class="logo">
+
+<div class="logo-icon">
+🛡️
+</div>
+
+<div>
+
+<div class="logo-text">
+MedGuardian AI
+</div>
+
+<div class="logo-sub">
+Smart Healthcare Assistant
+</div>
+
+</div>
+
+</div>
+
+
+<div class="left-content">
+
+<h1>
+Your Health,<br>
+Smarter & Safer.
+</h1>
+
+
+<p>
+
+MedGuardian AI helps you understand your
+health information using AI-powered
+educational guidance.
+
+</p>
+
+
+<div class="feature">
+
+<div class="feature-icon">
+🤖
+</div>
+
+<span>
+AI-powered health analysis
+</span>
+
+</div>
+
+
+<div class="feature">
+
+<div class="feature-icon">
+🛡️
+</div>
+
+<span>
+Smart health risk awareness
+</span>
+
+</div>
+
+
+<div class="feature">
+
+<div class="feature-icon">
+🎤
+</div>
+
+<span>
+Tamil & English voice support
+</span>
+
+</div>
+
+
+<div class="feature">
+
+<div class="feature-icon">
+📄
+</div>
+
+<span>
+Personal health consultation reports
+</span>
+
+</div>
+
+
+<div class="feature">
+
+<div class="feature-icon">
+🔐
+</div>
+
+<span>
+Secure patient dashboard
+</span>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- ===================================================
+     RIGHT PANEL
+=================================================== -->
+
+<section class="right-panel">
+
+
+<div class="login-box">
+
+
+<h2 class="login-title">
+Welcome Back 👋
+</h2>
+
+
+<p class="login-subtitle">
+
+Login to access your MedGuardian AI
+patient dashboard.
+
+</p>
+
+
+
+<!-- =================================================
+     ERROR FROM FLASK
+================================================= -->
+
+{% if error %}
+
+<div class="error-box">
+
+⚠️ {{ error }}
+
+</div>
+
+{% endif %}
+
+
+
+<!-- =================================================
+     LOGIN FORM
+================================================= -->
+
+<form
+    action="{{ url_for('login') }}"
+    method="POST"
+    id="loginForm">
+
+
+<div class="form-group">
+
+<label for="email">
+📧 Email Address
+</label>
+
+
+<div class="input-wrapper">
+
+<span class="input-icon">
+📧
+</span>
+
+
+<input
+    type="email"
+    id="email"
+    name="email"
+    placeholder="Enter your email"
+    autocomplete="email"
+    required>
+
+</div>
+
+</div>
+
+
+
+<div class="form-group">
+
+<label for="password">
+🔒 Password
+</label>
+
+
+<div class="input-wrapper">
+
+<span class="input-icon">
+🔒
+</span>
+
+
+<input
+    type="password"
+    id="password"
+    name="password"
+    placeholder="Enter your password"
+    autocomplete="current-password"
+    required>
+
+</div>
+
+</div>
+
+
+
+<button
+    type="submit"
+    class="login-button"
+    id="loginButton">
+
+🔐 Login to MedGuardian AI
+
+</button>
+
+
+</form>
+
+
+
+<!-- =================================================
+     DEMO ACCOUNT
+=================================================== -->
+
+<div class="demo-box">
+
+<div class="demo-title">
+🧪 Demo Account
+</div>
+
+
+<div class="demo-row">
+
+<span>
+Email:
+</span>
+
+<span class="demo-value">
+test@gmail.com
+</span>
+
+</div>
+
+
+<div class="demo-row">
+
+<span>
+Password:
+</span>
+
+<span class="demo-value">
+123456
+</span>
+
+</div>
+
+</div>
+
+
+
+<!-- =================================================
+     SECURITY
+=================================================== -->
+
+<div class="security">
+
+<span>🔒 Secure Login</span>
+
+<span>•</span>
+
+<span>🛡️ Patient Privacy</span>
+
+<span>•</span>
+
+<span>🤖 AI Assisted</span>
+
+</div>
+
+
+
+<!-- =================================================
+     DISCLAIMER
+=================================================== -->
+
+<div class="disclaimer">
+
+<strong>Medical Disclaimer:</strong>
+
+MedGuardian AI provides general healthcare
+information for educational purposes only.
+It does not provide a confirmed medical diagnosis
+and does not replace professional medical advice.
+
+</div>
+
+
+</div>
+
+</section>
+
+</div>
+
+
+
+<script>
+
+/* =====================================================
+   LOGIN BUTTON LOADING
+===================================================== */
+
+const loginForm =
+    document.getElementById("loginForm");
+
+const loginButton =
+    document.getElementById("loginButton");
+
+
+loginForm.addEventListener(
+    "submit",
+    function(){
+
+        loginButton.disabled =
+            true;
+
+        loginButton.innerText =
+            "⏳ Logging in...";
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>

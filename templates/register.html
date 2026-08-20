@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedGuardian AI | Register</title>
+    <style>
+        :root {
+            --bg-1: #eff6ff;
+            --bg-2: #ecfeff;
+            --bg-3: #f8fafc;
+            --panel: rgba(255,255,255,0.9);
+            --panel-strong: rgba(255,255,255,0.96);
+            --text: #0f172a;
+            --muted: #64748b;
+            --surface: #f8fafc;
+            --surface-strong: #ffffff;
+            --border: rgba(148,163,184,0.25);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            min-height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: radial-gradient(circle at top left, rgba(59,130,246,.18), transparent 25%),
+                        radial-gradient(circle at bottom right, rgba(16,185,129,.12), transparent 30%),
+                        linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 35%, var(--bg-3) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            transition: background 0.25s ease, color 0.25s ease;
+            color: var(--text);
+        }
+
+        body[data-theme="dark"] {
+            --bg-1: #020817;
+            --bg-2: #0f172a;
+            --bg-3: #111827;
+            --panel: rgba(15,23,42,0.9);
+            --panel-strong: rgba(15,23,42,0.96);
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --surface: #0b1220;
+            --surface-strong: #111827;
+            --border: rgba(148,163,184,0.18);
+            background: radial-gradient(circle at top left, rgba(59,130,246,.18), transparent 25%),
+                        radial-gradient(circle at bottom right, rgba(16,185,129,.12), transparent 30%),
+                        linear-gradient(135deg, #020817 0%, #0f172a 42%, #111827 100%);
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 980px;
+            background: var(--panel);
+            border: 1px solid rgba(255,255,255,0.7);
+            border-radius: 28px;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            box-shadow: 0 30px 80px rgba(37,99,235,.14);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.12);
+            color: white;
+            border-radius: 999px;
+            padding: 9px 14px;
+            font-weight: 700;
+            cursor: pointer;
+            z-index: 2;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(15,23,42,0.18);
+        }
+
+        .brand-panel {
+            background: linear-gradient(145deg, #1d4ed8, #2563eb 35%, #0ea5e9 70%, #10b981 100%);
+            color: white;
+            padding: 48px 38px;
+            position: relative;
+        }
+
+        .brand-panel::before,
+        .brand-panel::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,.08);
+        }
+
+        .brand-panel::before {
+            width: 260px;
+            height: 260px;
+            top: -80px;
+            right: -70px;
+        }
+
+        .brand-panel::after {
+            width: 220px;
+            height: 220px;
+            bottom: -60px;
+            left: -60px;
+        }
+
+        .brand-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 30px;
+        }
+
+        .brand-icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 18px;
+            background: rgba(255,255,255,.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            border: 1px solid rgba(255,255,255,.25);
+        }
+
+        .brand-name {
+            font-size: 26px;
+            font-weight: 800;
+        }
+
+        .brand-sub {
+            font-size: 12px;
+            opacity: 0.85;
+            margin-top: 4px;
+        }
+
+        .brand-panel h1 {
+            font-size: 34px;
+            line-height: 1.15;
+            margin-bottom: 16px;
+        }
+
+        .brand-panel p {
+            font-size: 14px;
+            line-height: 1.8;
+            opacity: 0.9;
+        }
+
+        .features {
+            margin-top: 28px;
+            display: grid;
+            gap: 14px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+        }
+
+        .feature-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: rgba(255,255,255,.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-panel {
+            padding: 46px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .form-box {
+            width: 100%;
+            max-width: 390px;
+        }
+
+        body[data-theme="dark"] .auth-card,
+        body[data-theme="dark"] .form-box,
+        body[data-theme="dark"] .field input,
+        body[data-theme="dark"] .field select,
+        body[data-theme="dark"] .error,
+        body[data-theme="dark"] .secondary-link {
+            background: rgba(15,23,42,0.8);
+            border-color: var(--border);
+            color: var(--text);
+        }
+
+        body[data-theme="dark"] .field input,
+        body[data-theme="dark"] .field select {
+            background: var(--surface);
+            color: var(--text);
+        }
+
+        body[data-theme="dark"] .subtitle,
+        body[data-theme="dark"] .field label,
+        body[data-theme="dark"] .secondary-link {
+            color: var(--muted);
+        }
+
+        .title {
+            font-size: 30px;
+            color: #0f172a;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 24px;
+        }
+
+        .error {
+            background: #fff1f2;
+            color: #991b1b;
+            border-left: 5px solid #ef4444;
+            padding: 12px 14px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            font-size: 13px;
+        }
+
+        form {
+            display: grid;
+            gap: 16px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+
+        .field input,
+        .field select {
+            width: 100%;
+            padding: 13px 14px;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+            background: #f8fafc;
+            color: #1e293b;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .field input:focus,
+        .field select:focus {
+            border-color: #2563eb;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(37,99,235,.1);
+        }
+
+        button {
+            width: 100%;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #2563eb, #0ea5e9);
+            color: white;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 12px 26px rgba(37,99,235,.25);
+            transition: 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(37,99,235,.28);
+        }
+
+        .secondary-link {
+            margin-top: 18px;
+            text-align: center;
+            display: block;
+            color: #1d4ed8;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        @media (max-width: 800px) {
+            .auth-card {
+                grid-template-columns: 1fr;
+            }
+
+            .brand-panel,
+            .form-panel {
+                padding: 32px 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-card">
+        <section class="brand-panel">
+            <div class="brand-content">
+                <div class="brand-logo">
+                    <div class="brand-icon">🛡️</div>
+                    <div>
+                        <div class="brand-name">MedGuardian AI</div>
+                        <div class="brand-sub">Smart Healthcare Assistant</div>
+                    </div>
+                </div>
+
+                <h1>Your Health, Smarter & Safer.</h1>
+                <p>Track symptoms, understand risk levels, and receive educational AI guidance in a secure and friendly patient dashboard.</p>
+
+                <div class="features">
+                    <div class="feature-item">
+                        <div class="feature-icon">🤖</div>
+                        <span>AI-powered health analysis</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🛡️</div>
+                        <span>Risk-aware health guidance</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🎤</div>
+                        <span>Tamil and English support</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="form-panel">
+            <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙 Dark</button>
+            <div class="form-box">
+                <div class="title">Create Account</div>
+                <div class="subtitle">Sign up to access your personal health dashboard.</div>
+
+                {% if error %}
+                    <div class="error">{{ error }}</div>
+                {% endif %}
+
+                <form method="POST">
+                    <div class="field">
+                        <label>Full Name</label>
+                        <input type="text" name="name" placeholder="Enter your name" required>
+                    </div>
+
+                    <div class="field">
+                        <label>Email</label>
+                        <input type="email" name="email" placeholder="Enter your email" required>
+                    </div>
+
+                    <div class="field">
+                        <label>Password</label>
+                        <input type="password" name="password" placeholder="Create password" required>
+                    </div>
+
+                    <div class="field">
+                        <label>Age</label>
+                        <input type="number" name="age" placeholder="Age">
+                    </div>
+
+                    <div class="field">
+                        <label>Gender</label>
+                        <select name="gender">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <button type="submit">Create Account</button>
+                </form>
+
+                <a class="secondary-link" href="/login">Back to Login</a>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function applyTheme(theme) {
+            document.body.setAttribute("data-theme", theme);
+            const toggle = document.getElementById("themeToggle");
+            if (toggle) {
+                toggle.textContent = theme === "dark" ? "☀️ Light" : "🌙 Dark";
+                toggle.setAttribute("aria-label", theme === "dark" ? "Switch to light mode" : "Switch to dark mode");
+            }
+            try {
+                localStorage.setItem("medguardian-theme", theme);
+            } catch (error) {
+                console.warn("Theme preference could not be saved.", error);
+            }
+        }
+
+        const savedTheme = (() => {
+            try {
+                const stored = localStorage.getItem("medguardian-theme");
+                if (stored === "dark" || stored === "light") return stored;
+            } catch (error) {
+                console.warn("Theme preference could not be read.", error);
+            }
+            return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        })();
+
+        applyTheme(savedTheme);
+
+        document.getElementById("themeToggle")?.addEventListener("click", () => {
+            const nextTheme = document.body.getAttribute("data-theme") === "dark" ? "light" : "dark";
+            applyTheme(nextTheme);
+        });
+    </script>
+
+    <footer class="footer">
+
+        MedGuardian AI © 2026
+
+        <br>
+
+        Smart • Safe • Educational Healthcare Assistant
+
+        <br>
+
+        Created by HARIHARAN.R and BHARATH KRISHNA.S
+
+        <br>
+
+        <a href="/privacy">Privacy Policy</a> • <a href="/terms">Terms of Service</a>
+
+    </footer>
+</body>
+</html>

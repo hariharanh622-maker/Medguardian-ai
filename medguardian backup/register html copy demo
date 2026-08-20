@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Register</title>
+</head>
+
+<body>
+
+<h2>Create Account</h2>
+
+{% if error %}
+<p style="color:red;">
+{{ error }}
+</p>
+{% endif %}
+
+<form method="POST">
+
+<input
+type="text"
+name="name"
+placeholder="Name"
+required>
+
+<br><br>
+
+<input
+type="email"
+name="email"
+placeholder="Email"
+required>
+
+<br><br>
+
+<input
+type="password"
+name="password"
+placeholder="Password"
+required>
+
+<br><br>
+
+<input
+type="number"
+name="age"
+placeholder="Age">
+
+<br><br>
+
+<select name="gender">
+
+<option>Male</option>
+<option>Female</option>
+<option>Other</option>
+
+</select>
+
+<br><br>
+
+<button type="submit">
+
+Create Account
+
+</button>
+
+</form>
+
+<br>
+
+<a href="/login">
+
+Back To Login
+
+</a>
+
+</body>
+</html>

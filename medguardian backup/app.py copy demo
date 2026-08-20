@@ -1,0 +1,1881 @@
+import os
+import sqlite3
+import traceback
+from datetime import datetime
+from functools import wraps
+from io import BytesIO
+
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    session,
+    send_file,
+    jsonify
+)
+
+from dotenv import load_dotenv
+
+
+# ============================================================
+# GEMINI
+# ============================================================
+
+try:
+    from google import genai
+    GEMINI_AVAILABLE = True
+except Exception:
+    GEMINI_AVAILABLE = False
+
+
+# ============================================================
+# CONFIG
+# ============================================================
+
+load_dotenv()
+
+app = Flask(__name__)
+
+app.secret_key = os.getenv(
+    "FLASK_SECRET_KEY",
+    "medguardian-development-secret-key"
+)
+
+DATABASE = "medguardian.db"
+
+GEMINI_API_KEY = os.getenv(
+    "GEMINI_API_KEY",
+    ""
+).strip()
+
+MODEL_NAME = os.getenv(
+    "GEMINI_MODEL",
+    "gemini-3.1-flash-lite"
+)
+
+gemini_client = None
+
+
+# ============================================================
+# GEMINI INITIALIZATION
+# ============================================================
+
+if GEMINI_AVAILABLE and GEMINI_API_KEY:
+
+    try:
+
+        gemini_client = genai.Client(
+            api_key=GEMINI_API_KEY
+        )
+
+        print("=" * 60)
+        print("Gemini API: Connected")
+        print("Model:", MODEL_NAME)
+        print("=" * 60)
+
+    except Exception as e:
+
+        print("Gemini Client Error:", e)
+
+else:
+
+    print("=" * 60)
+    print("WARNING: Gemini API not configured")
+    print("Local fallback mode enabled")
+    print("=" * 60)
+
+
+# ============================================================
+# DATABASE
+# ============================================================
+
+def get_db():
+
+    conn = sqlite3.connect(DATABASE)
+
+    conn.row_factory = sqlite3.Row
+
+    return conn
+
+
+def init_db():
+
+    conn = get_db()
+
+    cursor = conn.cursor()
+
+    # --------------------------------------------------------
+    # PATIENTS
+    # --------------------------------------------------------
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS patients (
+
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            name TEXT NOT NULL,
+
+            email TEXT UNIQUE NOT NULL,
+
+            password TEXT NOT NULL,
+
+            age INTEGER,
+
+            gender TEXT,
+
+            phone TEXT,
+
+            created_at TEXT NOT NULL
+
+        )
+    """)
+
+    # --------------------------------------------------------
+    # CONSULTATIONS
+    # --------------------------------------------------------
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS consultations (
+
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            patient_id INTEGER,
+
+            question TEXT NOT NULL,
+
+            ai_response TEXT,
+
+            risk_level TEXT,
+
+            specialist TEXT,
+
+            created_at TEXT NOT NULL,
+
+            FOREIGN KEY(patient_id)
+            REFERENCES patients(id)
+
+        )
+    """)
+
+    # --------------------------------------------------------
+    # MEDICINE REMINDERS
+    # --------------------------------------------------------
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS medicine_reminders (
+
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            patient_id INTEGER,
+
+            medicine_name TEXT NOT NULL,
+
+            reminder_time TEXT,
+
+            created_at TEXT NOT NULL,
+
+            FOREIGN KEY(patient_id)
+            REFERENCES patients(id)
+
+        )
+    """)
+
+    conn.commit()
+    conn.close()
+
+
+init_db()
+
+
+# ============================================================
+# LOGIN REQUIRED
+# ============================================================
+
+def login_required(function):
+
+    @wraps(function)
+    def decorated_function(*args, **kwargs):
+
+        if "user_id" not in session:
+
+            return redirect(
+                url_for("login")
+            )
+
+        return function(*args, **kwargs)
+
+    return decorated_function
+
+
+# ============================================================
+# LOCAL TRIAGE
+# ============================================================
+
+def local_triage(symptoms):
+
+    text = symptoms.lower()
+
+    emergency_keywords = [
+
+        "difficulty breathing",
+        "can't breathe",
+        "cannot breathe",
+        "severe chest pain",
+        "chest pain",
+        "unconscious",
+        "fainted",
+        "seizure",
+        "severe bleeding",
+        "stroke",
+        "paralysis",
+        "suicide"
+
+    ]
+
+    high_keywords = [
+
+        "very high fever",
+        "blood vomiting",
+        "vomiting blood",
+        "severe headache",
+        "confusion",
+        "persistent vomiting",
+        "severe dehydration",
+        "unable to breathe"
+
+    ]
+
+    medium_keywords = [
+
+        "fever",
+        "headache",
+        "vomiting",
+        "diarrhea",
+        "cough",
+        "cold",
+        "sore throat",
+        "throat pain",
+        "body pain",
+        "leg pain",
+        "stomach pain",
+        "fatigue",
+        "weakness"
+
+    ]
+
+    if any(
+        word in text
+        for word in emergency_keywords
+    ):
+
+        return {
+
+            "risk": "HIGH",
+
+            "specialist":
+                "Emergency Department",
+
+            "response": """
+
+### Summary
+
+Your symptoms may require urgent medical attention.
+
+### Possible Causes
+
+There can be several possible causes. An AI system
+cannot confirm the exact cause.
+
+### What You Can Do
+
+Seek appropriate medical evaluation promptly.
+
+### When To See A Doctor
+
+Please seek professional medical evaluation as soon
+as possible.
+
+### Emergency Warning Signs
+
+Difficulty breathing, severe chest pain,
+unconsciousness, seizures, severe bleeding,
+or rapidly worsening symptoms require urgent care.
+
+### Recommended Next Step
+
+Seek emergency medical care if symptoms are severe
+or worsening.
+
+Risk Level: HIGH
+
+Recommended Specialist: Emergency Department
+
+"""
+
+        }
+
+    if any(
+        word in text
+        for word in high_keywords
+    ):
+
+        return {
+
+            "risk": "HIGH",
+
+            "specialist":
+                "General Physician",
+
+            "response": """
+
+### Summary
+
+Your symptoms may need prompt medical evaluation.
+
+### Possible Causes
+
+There may be several possible causes and further
+assessment may be required.
+
+### What You Can Do
+
+Monitor your symptoms and maintain hydration
+where appropriate.
+
+### When To See A Doctor
+
+Consider contacting a healthcare professional
+promptly, particularly if symptoms persist or worsen.
+
+### Emergency Warning Signs
+
+Severe breathing difficulty, severe chest pain,
+confusion, fainting, or rapidly worsening symptoms.
+
+### Recommended Next Step
+
+Arrange professional medical evaluation.
+
+Risk Level: HIGH
+
+Recommended Specialist: General Physician
+
+"""
+
+        }
+
+    if any(
+        word in text
+        for word in medium_keywords
+    ):
+
+        return {
+
+            "risk": "MEDIUM",
+
+            "specialist":
+                "General Physician",
+
+            "response": """
+
+### Summary
+
+Your symptoms can occur with many common health
+conditions.
+
+### Possible Causes
+
+Possible causes may include infections,
+inflammation, or other conditions.
+
+### What You Can Do
+
+Rest adequately, stay hydrated, and monitor
+your symptoms.
+
+### When To See A Doctor
+
+Consult a healthcare professional if symptoms
+persist, worsen, or new concerning symptoms appear.
+
+### Emergency Warning Signs
+
+Seek urgent care for severe breathing difficulty,
+severe chest pain, fainting, confusion, seizures,
+or severe bleeding.
+
+### Recommended Next Step
+
+Continue monitoring and consider a medical
+consultation if symptoms continue.
+
+Risk Level: MEDIUM
+
+Recommended Specialist: General Physician
+
+"""
+
+        }
+
+    return {
+
+        "risk": "LOW",
+
+        "specialist":
+            "General Physician",
+
+        "response": """
+
+### Summary
+
+The information provided does not currently
+suggest an obvious high-risk emergency.
+
+### Possible Causes
+
+There can be many possible explanations for
+health symptoms.
+
+### What You Can Do
+
+Monitor your symptoms and maintain healthy
+daily habits.
+
+### When To See A Doctor
+
+Consult a healthcare professional if symptoms
+persist, worsen, or new symptoms appear.
+
+### Emergency Warning Signs
+
+Seek urgent medical care for severe breathing
+difficulty, severe chest pain, unconsciousness,
+seizures, severe bleeding, or stroke-like symptoms.
+
+### Recommended Next Step
+
+Continue monitoring your condition.
+
+Risk Level: LOW
+
+Recommended Specialist: General Physician
+
+"""
+
+    }
+
+
+# ============================================================
+# GEMINI AI
+# ============================================================
+
+def get_ai_analysis(symptoms, language="auto"):
+
+    fallback = local_triage(symptoms)
+
+    if not gemini_client:
+
+        return fallback
+
+    if language == "ta-IN":
+
+        language_instruction = """
+Respond primarily in Tamil.
+Use simple Tamil with necessary medical English
+terms in brackets.
+"""
+
+    elif language == "en-IN":
+
+        language_instruction = """
+Respond in simple and clear English.
+"""
+
+    else:
+
+        language_instruction = """
+Detect the user's language.
+If Tamil is used, respond primarily in Tamil.
+If English is used, respond in English.
+"""
+
+    system_instruction = f"""
+
+You are MedGuardian AI,
+an educational healthcare assistant.
+
+IMPORTANT:
+
+1. Never claim a confirmed diagnosis.
+2. Never prescribe medicines.
+3. Never provide medicine dosages.
+4. Provide educational information only.
+5. Explain possible causes as possibilities.
+6. Explain when professional medical care is needed.
+7. Clearly identify emergency warning signs.
+8. Do not create false certainty.
+9. Keep answers practical and understandable.
+10. Never pretend to be a doctor.
+
+{language_instruction}
+
+Return these sections:
+
+### Summary
+
+### Possible Causes
+
+### What You Can Do
+
+### When To See A Doctor
+
+### Emergency Warning Signs
+
+### Recommended Next Step
+
+At the end write:
+
+Risk Level: LOW / MEDIUM / HIGH
+
+Recommended Specialist: specialist name
+
+"""
+
+    prompt = f"""
+
+PATIENT HEALTH INFORMATION
+
+{symptoms}
+
+Analyze this information safely.
+
+Do not provide a confirmed diagnosis.
+
+Do not prescribe medicine or dosage.
+
+"""
+
+    try:
+
+        response = gemini_client.models.generate_content(
+
+            model=MODEL_NAME,
+
+            contents=prompt,
+
+            config={
+                "system_instruction":
+                    system_instruction,
+                "max_output_tokens":
+                    1800
+            }
+
+        )
+
+        text = getattr(
+            response,
+            "text",
+            None
+        )
+
+        if not text:
+
+            return fallback
+
+        upper_text = text.upper()
+
+        risk = "MEDIUM"
+
+        if "RISK LEVEL: HIGH" in upper_text:
+
+            risk = "HIGH"
+
+        elif "RISK LEVEL: LOW" in upper_text:
+
+            risk = "LOW"
+
+        specialist = "General Physician"
+
+        specialist_map = [
+
+            ("EMERGENCY", "Emergency Department"),
+            ("CARDIOLOGIST", "Cardiologist"),
+            ("DERMATOLOGIST", "Dermatologist"),
+            ("NEUROLOGIST", "Neurologist"),
+            ("ORTHOPEDIST", "Orthopedist"),
+            ("ENT SPECIALIST", "ENT Specialist"),
+            ("PULMONOLOGIST", "Pulmonologist"),
+            ("PEDIATRICIAN", "Pediatrician"),
+            ("GYNECOLOGIST", "Gynecologist")
+
+        ]
+
+        for keyword, name in specialist_map:
+
+            if keyword in upper_text:
+
+                specialist = name
+                break
+
+        return {
+
+            "risk":
+                risk,
+
+            "specialist":
+                specialist,
+
+            "response":
+                text
+
+        }
+
+    except Exception as e:
+
+        print("=" * 60)
+        print("GEMINI ERROR")
+        print(e)
+        print("=" * 60)
+
+        traceback.print_exc()
+
+        return fallback
+
+
+# ============================================================
+# SAVE CONSULTATION
+# ============================================================
+
+def save_consultation(
+
+    patient_id,
+    question,
+    ai_response,
+    risk_level,
+    specialist
+
+):
+
+    conn = get_db()
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+
+        """
+        INSERT INTO consultations
+        (
+            patient_id,
+            question,
+            ai_response,
+            risk_level,
+            specialist,
+            created_at
+        )
+
+        VALUES (?, ?, ?, ?, ?, ?)
+        """,
+
+        (
+
+            patient_id,
+            question,
+            ai_response,
+            risk_level,
+            specialist,
+            datetime.now().strftime(
+                "%Y-%m-%d %H:%M:%S"
+            )
+
+        )
+
+    )
+
+    consultation_id = cursor.lastrowid
+
+    conn.commit()
+    conn.close()
+
+    return consultation_id
+
+
+# ============================================================
+# HOME
+# ============================================================
+
+@app.route("/")
+@login_required
+def home():
+
+    conn = get_db()
+
+    patient = conn.execute(
+
+        """
+        SELECT *
+        FROM patients
+        WHERE id = ?
+        """,
+
+        (
+            session["user_id"],
+        )
+
+    ).fetchone()
+
+    consultations = conn.execute(
+
+        """
+        SELECT *
+        FROM consultations
+        WHERE patient_id = ?
+        ORDER BY id DESC
+        LIMIT 10
+        """,
+
+        (
+            session["user_id"],
+        )
+
+    ).fetchall()
+
+    reminders = conn.execute(
+
+        """
+        SELECT *
+        FROM medicine_reminders
+        WHERE patient_id = ?
+        ORDER BY id DESC
+        LIMIT 10
+        """,
+
+        (
+            session["user_id"],
+        )
+
+    ).fetchall()
+
+    conn.close()
+
+    return render_template(
+
+        "index.html",
+
+        patient=patient,
+
+        consultations=consultations,
+
+        reminders=reminders,
+
+        user_name=session.get(
+            "user_name",
+            "Patient"
+        )
+
+    )
+# ============================================================
+# REGISTER
+# ============================================================
+
+@app.route(
+    "/register",
+    methods=["GET", "POST"]
+)
+def register():
+
+    if request.method == "POST":
+
+        name = request.form.get(
+            "name",
+            ""
+        ).strip()
+
+        email = request.form.get(
+            "email",
+            ""
+        ).strip().lower()
+
+        password = request.form.get(
+            "password",
+            ""
+        ).strip()
+
+        age = request.form.get(
+            "age",
+            ""
+        )
+
+        gender = request.form.get(
+            "gender",
+            ""
+        )
+
+        if not name or not email or not password:
+
+            return render_template(
+                "register.html",
+                error="All fields are required."
+            )
+
+        conn = get_db()
+
+        existing = conn.execute(
+            """
+            SELECT *
+            FROM patients
+            WHERE email = ?
+            """,
+            (email,)
+        ).fetchone()
+
+        if existing:
+
+            conn.close()
+
+            return render_template(
+                "register.html",
+                error="Email already exists."
+            )
+
+        conn.execute(
+            """
+            INSERT INTO patients
+            (
+                name,
+                email,
+                password,
+                age,
+                gender,
+                phone,
+                created_at
+            )
+
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                name,
+                email,
+                password,
+                age,
+                gender,
+                "",
+                datetime.now().strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                )
+            )
+        )
+
+        conn.commit()
+        conn.close()
+
+        return redirect(
+            url_for("login")
+        )
+
+    return render_template(
+        "register.html"
+    )
+
+# ============================================================
+# LOGIN
+# ============================================================
+
+@app.route(
+    "/login",
+    methods=["GET", "POST"]
+)
+def login():
+
+    if request.method == "POST":
+
+        email = request.form.get(
+            "email",
+            ""
+        ).strip().lower()
+
+        password = request.form.get(
+            "password",
+            ""
+        )
+
+        if not email or not password:
+
+            return render_template(
+
+                "login.html",
+
+                error=
+                "Please enter email and password."
+
+            )
+
+        conn = get_db()
+
+        patient = conn.execute(
+
+            """
+            SELECT *
+            FROM patients
+            WHERE email = ?
+            """,
+
+            (
+                email,
+            )
+
+        ).fetchone()
+
+        conn.close()
+
+        if patient and patient["password"] == password:
+
+            session["user_id"] = patient["id"]
+
+            session["user_name"] = patient["name"]
+
+            session["user_email"] = patient["email"]
+
+            return redirect(
+                url_for("home")
+            )
+
+        # ----------------------------------------------------
+        # DEMO ACCOUNT
+        # ----------------------------------------------------
+
+        if (
+            email == "test@gmail.com"
+            and password == "123456"
+        ):
+
+            conn = get_db()
+
+            try:
+
+                conn.execute(
+
+                    """
+                    INSERT OR IGNORE INTO patients
+                    (
+                        name,
+                        email,
+                        password,
+                        age,
+                        gender,
+                        phone,
+                        created_at
+                    )
+
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    """,
+
+                    (
+
+                        "Test Patient",
+                        email,
+                        password,
+                        21,
+                        "Other",
+                        "",
+                        datetime.now().strftime(
+                            "%Y-%m-%d %H:%M:%S"
+                        )
+
+                    )
+
+                )
+
+                conn.commit()
+
+                patient = conn.execute(
+
+                    """
+                    SELECT *
+                    FROM patients
+                    WHERE email = ?
+                    """,
+
+                    (
+                        email,
+                    )
+
+                ).fetchone()
+
+                conn.close()
+
+                if patient:
+
+                    session["user_id"] = patient["id"]
+
+                    session["user_name"] = patient["name"]
+
+                    session["user_email"] = patient["email"]
+
+                    return redirect(
+                        url_for("home")
+                    )
+
+            except Exception as e:
+
+                print(
+                    "Demo account error:",
+                    e
+                )
+
+                try:
+                    conn.close()
+                except:
+                    pass
+
+        return render_template(
+
+            "login.html",
+
+            error=
+            "Invalid email or password."
+
+        )
+
+    return render_template(
+        "login.html"
+    )
+
+
+# ============================================================
+# LOGOUT
+# ============================================================
+
+@app.route("/logout")
+def logout():
+
+    session.clear()
+
+    return redirect(
+        url_for("login")
+    )
+
+
+# ============================================================
+# ASK AI
+# ============================================================
+
+@app.route(
+    "/ask-ai",
+    methods=["POST"]
+)
+@login_required
+def ask_ai():
+
+    try:
+
+        data = request.get_json(
+            silent=True
+        )
+
+        if not data:
+
+            return jsonify({
+
+                "success":
+                    False,
+
+                "error":
+                    "No patient data received."
+
+            }), 400
+
+        age = str(
+            data.get("age", "")
+        ).strip()
+
+        gender = str(
+            data.get("gender", "")
+        ).strip()
+
+        temperature = str(
+            data.get("temperature", "")
+        ).strip()
+
+        duration = str(
+            data.get("duration", "")
+        ).strip()
+
+        severity = str(
+            data.get("severity", "")
+        ).strip()
+
+        main_symptom = str(
+            data.get("main_symptom", "")
+        ).strip()
+
+        symptoms = str(
+            data.get("symptoms", "")
+        ).strip()
+
+        language = str(
+            data.get("language", "auto")
+        ).strip()
+
+        if not symptoms:
+
+            return jsonify({
+
+                "success":
+                    False,
+
+                "error":
+                    "Please enter your symptoms."
+
+            }), 400
+
+        structured_prompt = f"""
+
+PATIENT INFORMATION
+
+Age:
+{age or "Not provided"}
+
+Gender:
+{gender or "Not provided"}
+
+Temperature:
+{temperature + " °F" if temperature else "Not provided"}
+
+Duration:
+{duration or "Not provided"}
+
+Severity:
+{severity or "Not provided"}
+
+Main Symptom:
+{main_symptom or "Not provided"}
+
+Additional Symptoms:
+{symptoms}
+
+"""
+
+        result = get_ai_analysis(
+            structured_prompt,
+            language
+        )
+
+        risk = result.get(
+            "risk",
+            "MEDIUM"
+        )
+
+        specialist = result.get(
+            "specialist",
+            "General Physician"
+        )
+
+        response_text = result.get(
+            "response",
+            ""
+        )
+
+        if risk == "LOW":
+
+            risk_message = (
+                "Low immediate risk based on the "
+                "information provided. Continue monitoring."
+            )
+
+        elif risk == "HIGH":
+
+            risk_message = (
+                "Prompt medical evaluation may be "
+                "appropriate, especially if symptoms "
+                "are severe or worsening."
+            )
+
+        else:
+
+            risk_message = (
+                "Monitor your symptoms and consider "
+                "professional medical evaluation if "
+                "they persist or worsen."
+            )
+
+        consultation_id = save_consultation(
+
+            session["user_id"],
+
+            symptoms,
+
+            response_text,
+
+            risk,
+
+            specialist
+
+        )
+
+        session["last_question"] = symptoms
+
+        session["last_response"] = response_text
+
+        session["last_risk"] = risk
+
+        session["last_specialist"] = specialist
+
+        session["last_date"] = (
+            datetime.now().strftime(
+                "%d-%m-%Y %H:%M"
+            )
+        )
+
+        session.modified = True
+
+        return jsonify({
+
+            "success":
+                True,
+
+            "result":
+                response_text,
+
+            "risk":
+                risk,
+
+            "severity":
+                risk,
+
+            "risk_message":
+                risk_message,
+
+            "specialist":
+                specialist,
+
+            "consultation_id":
+                consultation_id,
+
+            "date":
+                session["last_date"]
+
+        })
+
+    except Exception as e:
+
+        print("=" * 60)
+        print("ASK AI ERROR:", e)
+        print("=" * 60)
+
+        traceback.print_exc()
+
+        return jsonify({
+
+            "success":
+                False,
+
+            "error":
+                "Server error: " + str(e)
+
+        }), 500
+
+
+# ============================================================
+# PATIENT PROFILE API
+# ============================================================
+
+@app.route("/api/profile")
+@login_required
+def profile_api():
+
+    conn = get_db()
+
+    patient = conn.execute(
+
+        """
+        SELECT id, name, email, age,
+               gender, phone, created_at
+        FROM patients
+        WHERE id = ?
+        """,
+
+        (
+            session["user_id"],
+        )
+
+    ).fetchone()
+
+    conn.close()
+
+    if not patient:
+
+        return jsonify({
+            "success": False,
+            "error": "Patient not found."
+        }), 404
+
+    return jsonify({
+
+        "success": True,
+
+        "patient": dict(patient)
+
+    })
+
+
+# ============================================================
+# CONSULTATION HISTORY API
+# ============================================================
+
+@app.route("/api/history")
+@login_required
+def history_api():
+
+    conn = get_db()
+
+    rows = conn.execute(
+
+        """
+        SELECT
+            id,
+            question,
+            ai_response,
+            risk_level,
+            specialist,
+            created_at
+        FROM consultations
+        WHERE patient_id = ?
+        ORDER BY id DESC
+        LIMIT 20
+        """,
+
+        (
+            session["user_id"],
+        )
+
+    ).fetchall()
+
+    conn.close()
+
+    return jsonify({
+
+        "success":
+            True,
+
+        "history":
+            [dict(row) for row in rows]
+
+    })
+
+
+# ============================================================
+# BMI
+# ============================================================
+
+@app.route(
+    "/api/bmi",
+    methods=["POST"]
+)
+@login_required
+def calculate_bmi():
+
+    try:
+
+        data = request.get_json(
+            silent=True
+        )
+
+        weight = float(
+            data.get("weight", 0)
+        )
+
+        height = float(
+            data.get("height", 0)
+        )
+
+        if weight <= 0 or height <= 0:
+
+            return jsonify({
+
+                "success":
+                    False,
+
+                "error":
+                    "Enter valid weight and height."
+
+            }), 400
+
+        height_m = height / 100
+
+        bmi = weight / (
+            height_m * height_m
+        )
+
+        bmi = round(
+            bmi,
+            1
+        )
+
+        if bmi < 18.5:
+
+            category = "Underweight"
+
+        elif bmi < 25:
+
+            category = "Normal"
+
+        elif bmi < 30:
+
+            category = "Overweight"
+
+        else:
+
+            category = "Obesity"
+
+        return jsonify({
+
+            "success":
+                True,
+
+            "bmi":
+                bmi,
+
+            "category":
+                category
+
+        })
+
+    except Exception as e:
+
+        return jsonify({
+
+            "success":
+                False,
+
+            "error":
+                str(e)
+
+        }), 400
+
+
+# ============================================================
+# MEDICINE REMINDER
+# ============================================================
+
+@app.route(
+    "/medicine-reminder",
+    methods=["POST"]
+)
+@login_required
+def medicine_reminder():
+
+    try:
+
+        data = request.get_json(
+            silent=True
+        )
+
+        if not data:
+
+            return jsonify({
+                "success": False,
+                "error": "No data received."
+            }), 400
+
+        medicine_name = str(
+            data.get(
+                "medicine_name",
+                ""
+            )
+        ).strip()
+
+        reminder_time = str(
+            data.get(
+                "reminder_time",
+                ""
+            )
+        ).strip()
+
+        if not medicine_name:
+
+            return jsonify({
+
+                "success":
+                    False,
+
+                "error":
+                    "Medicine name is required."
+
+            }), 400
+
+        conn = get_db()
+
+        conn.execute(
+
+            """
+            INSERT INTO medicine_reminders
+            (
+                patient_id,
+                medicine_name,
+                reminder_time,
+                created_at
+            )
+
+            VALUES (?, ?, ?, ?)
+            """,
+
+            (
+
+                session["user_id"],
+
+                medicine_name,
+
+                reminder_time,
+
+                datetime.now().strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                )
+
+            )
+
+        )
+
+        conn.commit()
+        conn.close()
+
+        return jsonify({
+
+            "success":
+                True,
+
+            "message":
+                "Reminder saved successfully."
+
+        })
+
+    except Exception as e:
+
+        print(
+            "Reminder error:",
+            e
+        )
+
+        return jsonify({
+
+            "success":
+                False,
+
+            "error":
+                str(e)
+
+        }), 500
+
+
+# ============================================================
+# DOWNLOAD HEALTH REPORT
+# ============================================================
+
+@app.route("/download-report")
+@login_required
+def download_report():
+
+    question = session.get(
+        "last_question",
+        "No consultation available"
+    )
+
+    response = session.get(
+        "last_response",
+        "No AI response available"
+    )
+
+    risk = session.get(
+        "last_risk",
+        "MEDIUM"
+    )
+
+    specialist = session.get(
+        "last_specialist",
+        "General Physician"
+    )
+
+    date = session.get(
+        "last_date",
+        datetime.now().strftime(
+            "%d-%m-%Y %H:%M"
+        )
+    )
+
+    report_text = f"""
+
+====================================================
+                 MEDGUARDIAN AI
+              HEALTH CONSULTATION
+====================================================
+
+Patient:
+{session.get("user_name", "Patient")}
+
+Date:
+{date}
+
+====================================================
+SYMPTOMS
+====================================================
+
+{question}
+
+====================================================
+AI ANALYSIS
+====================================================
+
+{response}
+
+====================================================
+RISK LEVEL
+====================================================
+
+{risk}
+
+====================================================
+RECOMMENDED SPECIALIST
+====================================================
+
+{specialist}
+
+====================================================
+MEDICAL DISCLAIMER
+====================================================
+
+This report is generated by an AI healthcare
+assistant for educational purposes only.
+
+It is NOT a confirmed medical diagnosis.
+
+It does NOT replace professional medical advice.
+
+If symptoms are severe or worsening, seek
+appropriate medical care.
+
+====================================================
+
+MedGuardian AI © 2026
+
+"""
+
+    try:
+
+        from reportlab.lib.pagesizes import A4
+        from reportlab.pdfgen import canvas
+
+        pdf_buffer = BytesIO()
+
+        pdf = canvas.Canvas(
+            pdf_buffer,
+            pagesize=A4
+        )
+
+        width, height = A4
+
+        x = 45
+
+        y = height - 50
+
+        pdf.setFont(
+            "Helvetica-Bold",
+            16
+        )
+
+        pdf.drawString(
+            x,
+            y,
+            "MedGuardian AI - Health Report"
+        )
+
+        y -= 30
+
+        pdf.setFont(
+            "Helvetica",
+            10
+        )
+
+        for line in report_text.splitlines():
+
+            if y < 45:
+
+                pdf.showPage()
+
+                pdf.setFont(
+                    "Helvetica",
+                    10
+                )
+
+                y = height - 50
+
+            safe_line = (
+                line.encode(
+                    "ascii",
+                    "ignore"
+                ).decode()
+            )
+
+            pdf.drawString(
+                x,
+                y,
+                safe_line[:110]
+            )
+
+            y -= 14
+
+        pdf.save()
+
+        pdf_buffer.seek(0)
+
+        return send_file(
+
+            pdf_buffer,
+
+            mimetype=
+                "application/pdf",
+
+            as_attachment=True,
+
+            download_name=
+                "MedGuardian_Health_Report.pdf"
+
+        )
+
+    except Exception as e:
+
+        print(
+            "PDF error:",
+            e
+        )
+
+        text_buffer = BytesIO(
+            report_text.encode(
+                "utf-8"
+            )
+        )
+
+        text_buffer.seek(0)
+
+        return send_file(
+
+            text_buffer,
+
+            mimetype=
+                "text/plain",
+
+            as_attachment=True,
+
+            download_name=
+                "MedGuardian_Health_Report.txt"
+
+        )
+
+
+# ============================================================
+# HEALTH CHECK
+# ============================================================
+
+@app.route("/health")
+def health():
+
+    return jsonify({
+
+        "status":
+            "running",
+
+        "application":
+            "MedGuardian AI",
+
+        "gemini":
+            bool(gemini_client),
+
+        "model":
+            MODEL_NAME,
+
+        "time":
+            datetime.now().isoformat()
+
+    })
+
+
+# ============================================================
+# 404
+# ============================================================
+
+@app.errorhandler(404)
+def page_not_found(error):
+
+    return jsonify({
+
+        "success":
+            False,
+
+        "error":
+            "Page not found."
+
+    }), 404
+
+
+# ============================================================
+# 405
+# ============================================================
+
+@app.errorhandler(405)
+def method_not_allowed(error):
+
+    return jsonify({
+
+        "success":
+            False,
+
+        "error":
+            "Method not allowed."
+
+    }), 405
+
+
+# ============================================================
+# RUN
+# ============================================================
+
+if __name__ == "__main__":
+
+    print()
+    print("=" * 65)
+    print("                 MEDGUARDIAN AI")
+    print("           PHASE 6 - SMART DASHBOARD")
+    print("=" * 65)
+
+    print(
+        "Gemini:",
+        "Connected"
+        if gemini_client
+        else "Fallback Mode"
+    )
+
+    print(
+        "Model:",
+        MODEL_NAME
+    )
+
+    print(
+        "Login:",
+        "http://127.0.0.1:5000/login"
+    )
+
+    print("=" * 65)
+
+    app.run(
+
+        host="127.0.0.1",
+
+        port=5000,
+
+        debug=True
+
+    ) 
+    result = get_ai_analysis(
+            structured_prompt,
+            language
+        )

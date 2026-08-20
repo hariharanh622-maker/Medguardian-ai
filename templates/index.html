@@ -1,0 +1,4500 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>MedGuardian AI | Patient Dashboard</title>
+
+<style>
+
+:root {
+    --bg-1: #edf7ff;
+    --bg-2: #eefcf7;
+    --bg-3: #fff9f3;
+    --panel: rgba(255,255,255,0.88);
+    --panel-strong: rgba(255,255,255,0.94);
+    --surface: #ffffff;
+    --surface-soft: #f8fafc;
+    --surface-alt: #eff6ff;
+    --text: #172033;
+    --text-soft: #64748b;
+    --heading: #1e3a8a;
+    --border: rgba(148,163,184,0.28);
+    --shadow: 0 18px 45px rgba(15,23,42,0.08);
+    --primary: #2563eb;
+    --primary-strong: #1d4ed8;
+    --secondary: #0ea5e9;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Inter, Arial, sans-serif;
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top left, rgba(37,99,235,.15), transparent 25%),
+        radial-gradient(circle at bottom right, rgba(16,185,129,.12), transparent 30%),
+        linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 35%, var(--bg-3) 100%);
+    color: var(--text);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+body[data-theme="dark"] {
+    --bg-1: #020817;
+    --bg-2: #0f172a;
+    --bg-3: #111827;
+    --panel: rgba(15,23,42,0.86);
+    --panel-strong: rgba(15,23,42,0.96);
+    --surface: #111827;
+    --surface-soft: #0f172a;
+    --surface-alt: #172554;
+    --text: #e2e8f0;
+    --text-soft: #94a3b8;
+    --heading: #bfdbfe;
+    --border: rgba(148,163,184,0.2);
+    --shadow: 0 18px 45px rgba(2,6,23,0.45);
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+
+    background:
+        linear-gradient(
+            135deg,
+            #1d4ed8,
+            #2563eb 38%,
+            #0ea5e9 72%,
+            #10b981
+        );
+
+    color: white;
+
+    padding: 22px 6%;
+
+    box-shadow:
+        0 15px 35px
+        rgba(37, 99, 235, 0.22);
+
+}
+
+
+.header-content {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+}
+
+
+.brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+}
+
+
+.brand-icon {
+
+    width: 48px;
+
+    height: 48px;
+
+    border-radius: 15px;
+
+    background:
+        rgba(255,255,255,0.18);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 26px;
+
+}
+
+
+.brand h1 {
+
+    font-size: 25px;
+
+}
+
+
+.brand p {
+
+    font-size: 12px;
+
+    opacity: 0.85;
+
+}
+
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.theme-toggle,
+.logout {
+    color: white;
+    text-decoration: none;
+    background: rgba(255,255,255,0.16);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.theme-toggle:hover,
+.logout:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.18);
+}
+
+.theme-toggle {
+    font-size: 14px;
+}
+
+.logout {
+    background: linear-gradient(135deg, #f97316, #ef4444);
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.container {
+
+    width: 92%;
+
+    max-width: 1400px;
+
+    margin: 28px auto 60px;
+
+}
+
+
+/* =========================================================
+   WELCOME
+========================================================= */
+
+.welcome {
+
+    background: rgba(255,255,255,0.86);
+
+    backdrop-filter: blur(12px);
+
+    border-radius: 22px;
+
+    padding: 25px;
+
+    margin-bottom: 22px;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.9);
+
+    box-shadow:
+        0 12px 35px
+        rgba(15,23,42,0.08);
+
+}
+
+.welcome-header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   gap: 20px;
+   flex-wrap: wrap;
+}
+
+.welcome h2 {
+
+   color: #1e3a8a;
+
+   margin-bottom: 6px;
+
+}
+
+
+.welcome p {
+
+   color: #64748b;
+
+}
+
+.welcome-insights {
+   display: grid;
+   grid-template-columns: 1.2fr 1fr;
+   gap: 16px;
+   margin-top: 20px;
+}
+
+.score-card,
+.quick-panel {
+   background: linear-gradient(135deg, rgba(37,99,235,0.06), rgba(20,184,166,0.08));
+   border: 1px solid rgba(96,165,250,0.18);
+   border-radius: 18px;
+   padding: 18px;
+}
+
+.score-card {
+   display: flex;
+   align-items: center;
+   gap: 18px;
+}
+
+.score-ring {
+   width: 96px;
+   height: 96px;
+   border-radius: 50%;
+   background: conic-gradient(#10b981 0 88%, #dbeafe 88% 100%);
+   display: grid;
+   place-items: center;
+   position: relative;
+   box-shadow: inset 0 0 0 10px rgba(255,255,255,0.7);
+}
+
+.score-ring::before {
+   content: "";
+   position: absolute;
+   inset: 11px;
+   background: rgba(255,255,255,0.92);
+   border-radius: 50%;
+}
+
+.score-inner {
+   position: relative;
+   z-index: 1;
+   text-align: center;
+   color: #1d4ed8;
+}
+
+.score-inner strong {
+   display: block;
+   font-size: 22px;
+   line-height: 1;
+}
+
+.score-inner small {
+   font-size: 10px;
+   letter-spacing: 0.06em;
+   text-transform: uppercase;
+   color: #64748b;
+}
+
+.score-copy h3 {
+   margin: 0 0 6px;
+   color: #1e293b;
+   font-size: 20px;
+}
+
+.score-copy p {
+   margin: 0;
+   color: #64748b;
+   font-size: 12px;
+   line-height: 1.6;
+}
+
+.quick-panel {
+   display: grid;
+   gap: 8px;
+}
+
+.quick-stat {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   font-size: 12px;
+   color: #475569;
+   padding: 8px 10px;
+   border-radius: 10px;
+   background: rgba(255,255,255,0.45);
+}
+
+.quick-stat strong {
+   color: #1d4ed8;
+}
+
+/* =========================================================
+   FEATURE CARDS
+========================================================= */
+
+.features {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 18px;
+
+    margin-bottom: 25px;
+
+}
+
+
+.feature {
+
+    background:
+        linear-gradient(135deg, rgba(255,255,255,0.95), rgba(239,246,255,0.9));
+
+    padding: 22px;
+
+    border-radius: 18px;
+
+    text-align: center;
+
+    box-shadow:
+        0 12px 30px
+        rgba(37,99,235,0.08);
+
+    border:
+        1px solid
+        rgba(191,219,254,0.9);
+
+}
+
+
+.feature-icon {
+
+    font-size: 30px;
+
+    margin-bottom: 10px;
+
+}
+
+
+.feature h3 {
+
+    color: #334155;
+
+    margin-bottom: 5px;
+
+}
+
+
+.feature p {
+
+    color: #94a3b8;
+
+    font-size: 13px;
+
+}
+
+
+/* =========================================================
+   GRID
+========================================================= */
+
+.main-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 2fr)
+        minmax(300px, 1fr);
+
+    gap: 22px;
+
+}
+
+
+.card {
+
+    background:
+        rgba(255,255,255,0.92);
+
+    border-radius: 24px;
+
+    padding: 24px;
+
+    margin-bottom: 22px;
+
+    box-shadow:
+        0 18px 40px
+        rgba(15,23,42,0.06);
+
+    border:
+        1px solid
+        rgba(191,219,254,0.8);
+
+}
+
+
+.card-title {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 18px;
+
+}
+
+
+.card-title h2 {
+
+    color: #1e293b;
+
+    font-size: 20px;
+
+}
+
+.care-team-card {
+   background: linear-gradient(135deg, rgba(239,246,255,0.96), rgba(236,254,255,0.92));
+}
+
+.care-team-list {
+   display: grid;
+   gap: 12px;
+}
+
+.care-member {
+   display: flex;
+   align-items: center;
+   gap: 12px;
+   padding: 12px 10px;
+   border-radius: 14px;
+   background: rgba(255,255,255,0.48);
+   border: 1px solid rgba(148,163,184,0.18);
+}
+
+.care-avatar {
+   width: 42px;
+   height: 42px;
+   border-radius: 14px;
+   display: grid;
+   place-items: center;
+   font-size: 12px;
+   font-weight: 800;
+   color: white;
+   background: linear-gradient(135deg, #2563eb, #0ea5e9);
+}
+
+.care-avatar.alt {
+   background: linear-gradient(135deg, #0ea5e9, #14b8a6);
+}
+
+.care-avatar.soft {
+   background: linear-gradient(135deg, #8b5cf6, #ec4899);
+}
+
+.care-member strong,
+.care-member span {
+   display: block;
+}
+
+.care-member strong {
+   color: #1e293b;
+   margin-bottom: 3px;
+   font-size: 14px;
+}
+
+.care-member span {
+   color: #64748b;
+   font-size: 11px;
+}
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+.profile {
+
+    background:
+        linear-gradient(
+            145deg,
+            #eff6ff,
+            #ecfeff
+        );
+
+}
+
+
+.profile-name {
+
+    font-size: 25px;
+
+    font-weight: 800;
+
+    color: #1d4ed8;
+
+    margin-bottom: 15px;
+
+}
+
+
+.profile-row {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    padding: 9px 0;
+
+    border-bottom:
+        1px solid
+        rgba(148,163,184,0.15);
+
+}
+
+
+.profile-row:last-child {
+
+    border-bottom: none;
+
+}
+
+
+.profile-label {
+
+    color: #64748b;
+
+}
+
+
+.profile-value {
+
+    font-weight: 700;
+
+    color: #334155;
+
+}
+
+
+/* =========================================================
+   LANGUAGE
+========================================================= */
+
+.language-buttons {
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-bottom: 18px;
+
+}
+
+
+.lang-btn {
+
+    border: none;
+
+    padding: 10px 18px;
+
+    border-radius: 30px;
+
+    cursor: pointer;
+
+    background: #e2e8f0;
+
+    color: #334155;
+
+    font-weight: 700;
+
+}
+
+
+.lang-btn.active {
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #0ea5e9
+        );
+
+    color: white;
+
+    box-shadow:0 10px 20px rgba(37,99,235,.18);
+
+}
+
+
+/* =========================================================
+   INPUTS
+========================================================= */
+
+.form-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 16px;
+
+}
+
+
+.form-group {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+
+}
+
+
+.form-group.full {
+
+    grid-column:
+        1 / -1;
+
+}
+
+
+label {
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    color: #475569;
+
+}
+
+
+input,
+select,
+textarea {
+
+    width: 100%;
+
+    padding: 13px 14px;
+
+    border-radius: 12px;
+
+    border:
+        1px solid
+        #dbe3ef;
+
+    background: #f8fafc;
+
+    outline: none;
+
+    font-size: 14px;
+
+    transition: 0.2s;
+
+}
+
+
+input:focus,
+select:focus,
+textarea:focus {
+
+    border-color: #3b82f6;
+
+    background: white;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(59,130,246,0.1);
+
+}
+
+
+textarea {
+
+    min-height: 150px;
+
+    resize: vertical;
+
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.buttons {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-top: 18px;
+
+}
+
+
+button {
+
+    border: none;
+
+    cursor: pointer;
+
+    font-weight: 700;
+
+}
+
+
+.btn {
+
+    padding: 12px 17px;
+
+    border-radius: 12px;
+
+    color: white;
+
+    transition: 0.2s;
+
+}
+
+
+.btn:hover {
+
+    transform:
+        translateY(-2px);
+
+}
+
+
+.btn-primary {
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #0ea5e9
+        );
+
+}
+
+
+.btn-green {
+
+    background:
+        linear-gradient(
+            135deg,
+            #059669,
+            #10b981
+        );
+
+}
+
+
+.btn-red {
+
+    background:
+        linear-gradient(
+            135deg,
+            #ef4444,
+            #f97316
+        );
+
+}
+
+
+.btn-purple {
+
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #a855f7
+        );
+
+}
+
+
+.btn-orange {
+
+    background:
+        linear-gradient(
+            135deg,
+            #f59e0b,
+            #f97316
+        );
+
+}
+
+
+/* =========================================================
+   ANALYSIS
+========================================================= */
+
+.analysis {
+
+    margin-top: 22px;
+
+    display: none;
+
+}
+
+
+.analysis.show {
+
+    display: block;
+
+}
+
+
+.analysis-content {
+
+    line-height: 1.75;
+
+    color: #334155;
+
+    white-space: normal;
+
+}
+
+.error-box {
+    display: none;
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.18);
+    color: #991b1b;
+    font-weight: 700;
+    gap: 10px;
+    align-items: center;
+}
+
+.medical-report {
+    display: grid;
+    gap: 14px;
+}
+
+.report-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.report-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+}
+
+.report-badge.low {
+    background: rgba(16,185,129,0.14);
+    color: #047857;
+}
+
+.report-badge.medium {
+    background: rgba(245,158,11,0.14);
+    color: #b45309;
+}
+
+.report-badge.high {
+    background: rgba(239,68,68,0.12);
+    color: #b91c1c;
+}
+
+.report-badge.emergency {
+    background: rgba(153,27,27,0.12);
+    color: #7f1d1d;
+}
+
+.report-specialist {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(37,99,235,0.08);
+    color: #1d4ed8;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.report-section {
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(37,99,235,0.04), rgba(20,184,166,0.04));
+    border: 1px solid rgba(148,163,184,0.22);
+}
+
+.report-section h3 {
+    margin: 0 0 8px;
+    font-size: 15px;
+    color: #1d4ed8;
+}
+
+.report-section p {
+    margin: 0;
+    color: #475569;
+    line-height: 1.7;
+}
+
+.empty-state {
+    margin: 0;
+    color: #64748b;
+    font-style: italic;
+}
+
+.loading {
+
+    display: none;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    background: #eff6ff;
+
+    color: #1d4ed8;
+
+    margin-top: 15px;
+
+    font-weight: 700;
+
+}
+
+
+.loading.show {
+
+    display: block;
+
+}
+
+
+/* =========================================================
+   RISK
+========================================================= */
+
+.risk-panel {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 20px;
+
+    align-items: center;
+
+}
+
+
+.risk-box {
+
+    text-align: center;
+
+    padding: 25px;
+
+    border-radius: 18px;
+
+}
+
+
+.risk-box.low {
+
+    background:
+        #ecfdf5;
+
+    color:
+        #047857;
+
+}
+
+
+.risk-box.medium {
+
+    background:
+        #fffbeb;
+
+    color:
+        #b45309;
+
+}
+
+
+.risk-box.high {
+
+    background:
+        #fef2f2;
+
+    color:
+        #b91c1c;
+
+}
+
+
+.risk-level {
+
+    font-size: 28px;
+
+    font-weight: 900;
+
+    margin-top: 8px;
+
+}
+
+.risk-message {
+margin-top: 10px;
+font-size: 12px;
+line-height: 1.6;
+opacity: 0.88;
+}
+
+
+/* =========================================================
+PIE CHART
+========================================================= */
+.chart-wrapper {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+}
+
+
+#riskChart {
+
+    width: 220px;
+
+    height: 220px;
+
+}
+
+
+/* =========================================================
+   SPECIALIST
+========================================================= */
+
+.specialist {
+
+    padding: 18px;
+
+    border-radius: 16px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef2ff,
+            #ecfeff
+        );
+
+    border-left:
+        5px solid
+        #4f46e5;
+
+}
+
+
+.specialist strong {
+
+    color: #3730a3;
+
+}
+
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+.history-item {
+
+    padding: 16px;
+
+    border-radius: 15px;
+
+    background:
+        #f8fafc;
+
+    margin-bottom: 12px;
+
+    border:
+        1px solid
+        #e2e8f0;
+
+}
+
+
+.history-top {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 8px;
+
+}
+
+
+.history-date {
+
+    color: #94a3b8;
+
+    font-size: 12px;
+
+}
+
+
+.badge {
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+}
+
+
+.badge.low {
+
+    background: #dcfce7;
+
+    color: #166534;
+
+}
+
+
+.badge.medium {
+
+    background: #fef3c7;
+
+    color: #92400e;
+
+}
+
+
+.badge.high {
+
+    background: #fee2e2;
+
+    color: #991b1b;
+
+}
+
+
+/* =========================================================
+   BMI
+========================================================= */
+
+.bmi-result {
+
+    margin-top: 15px;
+
+    padding: 16px;
+
+    border-radius: 15px;
+
+    background:
+        #eff6ff;
+
+    display: none;
+
+}
+
+
+.bmi-number {
+
+    font-size: 32px;
+
+    font-weight: 900;
+
+    color: #2563eb;
+
+}
+
+
+/* =========================================================
+   APPOINTMENTS
+========================================================= */
+
+.appointment-list {
+   display: grid;
+   gap: 12px;
+}
+
+.appointment-card {
+   background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(20,184,166,0.07));
+   border: 1px solid rgba(59,130,246,0.18);
+   border-radius: 18px;
+   padding: 16px;
+   transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.appointment-card:hover {
+   transform: translateY(-2px);
+   box-shadow: 0 18px 35px rgba(37,99,235,0.1);
+}
+
+.appointment-head {
+   display: flex;
+   justify-content: space-between;
+   gap: 10px;
+   margin-bottom: 8px;
+}
+
+.doctor-name {
+   font-size: 17px;
+   font-weight: 800;
+   color: #1e293b;
+}
+
+.appointment-meta {
+   color: #64748b;
+   font-size: 12px;
+   line-height: 1.7;
+}
+
+.appointment-status {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   border-radius: 999px;
+   padding: 6px 10px;
+   font-size: 11px;
+   font-weight: 800;
+   background: rgba(16,185,129,0.12);
+   color: #047857;
+}
+
+.appointment-actions {
+   display: flex;
+   gap: 8px;
+   margin-top: 12px;
+   flex-wrap: wrap;
+}
+
+.appointment-btn {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   border-radius: 10px;
+   text-decoration: none;
+   border: none;
+   padding: 8px 12px;
+   font-size: 12px;
+   font-weight: 800;
+   cursor: pointer;
+}
+
+.appointment-btn.primary {
+   background: linear-gradient(135deg, #2563eb, #0ea5e9);
+   color: white;
+}
+
+.appointment-btn.secondary {
+   background: rgba(148,163,184,0.12);
+   color: #334155;
+}
+
+/* =========================================================
+   PREMIUM INSIGHTS
+========================================================= */
+
+.insight-grid {
+   display: grid;
+   grid-template-columns: repeat(3, minmax(0, 1fr));
+   gap: 12px;
+   margin-top: 16px;
+}
+
+.stat-card {
+   background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(14,165,233,0.06));
+   border: 1px solid rgba(59,130,246,0.18);
+   border-radius: 16px;
+   padding: 16px 14px;
+}
+
+.stat-card .label {
+   display: block;
+   color: #64748b;
+   font-size: 11px;
+   font-weight: 700;
+   margin-bottom: 8px;
+}
+
+.stat-card .value {
+   font-size: 28px;
+   font-weight: 900;
+   color: #1d4ed8;
+}
+
+.stat-card .delta {
+   display: inline-block;
+   margin-top: 6px;
+   font-size: 11px;
+   font-weight: 700;
+   color: #10b981;
+}
+
+.trend-panel {
+   background: linear-gradient(135deg, rgba(15,118,110,0.08), rgba(59,130,246,0.08));
+   border: 1px solid rgba(45,212,191,0.18);
+   border-radius: 18px;
+   padding: 18px;
+   margin-top: 18px;
+}
+
+.trend-chart {
+   width: 100%;
+   height: 180px;
+   display: block;
+   border-radius: 12px;
+   background: rgba(255,255,255,0.35);
+}
+
+.chart-legend {
+   display: flex;
+   gap: 18px;
+   flex-wrap: wrap;
+   margin-top: 12px;
+   color: #64748b;
+   font-size: 11px;
+   font-weight: 700;
+}
+
+.chart-legend span {
+   display: inline-flex;
+   align-items: center;
+   gap: 8px;
+}
+
+.chart-legend i {
+   display: inline-block;
+   width: 10px;
+   height: 10px;
+   border-radius: 50%;
+}
+
+.notification-list {
+   display: grid;
+   gap: 10px;
+   margin-top: 14px;
+}
+
+.notification-item {
+   display: flex;
+   gap: 12px;
+   align-items: flex-start;
+   background: rgba(248,250,252,0.95);
+   border: 1px solid rgba(148,163,184,0.2);
+   border-radius: 14px;
+   padding: 12px 13px;
+}
+
+.notification-icon {
+   width: 36px;
+   height: 36px;
+   border-radius: 12px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   background: linear-gradient(135deg, #eff6ff, #ecfeff);
+   font-size: 18px;
+}
+
+.notification-item strong {
+   display: block;
+   font-size: 13px;
+   color: #1e293b;
+   margin-bottom: 4px;
+}
+
+.notification-item p {
+   margin: 0;
+   color: #64748b;
+   font-size: 11px;
+   line-height: 1.5;
+}
+
+.tips-carousel {
+   position: relative;
+   overflow: hidden;
+   border-radius: 18px;
+   background: linear-gradient(135deg, rgba(79,70,229,0.08), rgba(14,165,233,0.08));
+   border: 1px solid rgba(79,70,229,0.14);
+   min-height: 180px;
+   margin-top: 18px;
+}
+
+.tip-slide {
+   display: none;
+   padding: 18px;
+   min-height: 180px;
+}
+
+.tip-slide.active {
+   display: block;
+   animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+   from { opacity: 0; transform: translateY(10px); }
+   to { opacity: 1; transform: translateY(0); }
+}
+
+.tip-slide .tip-icon {
+   width: 52px;
+   height: 52px;
+   border-radius: 18px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   background: linear-gradient(135deg, #2563eb, #0ea5e9);
+   color: white;
+   font-size: 26px;
+   margin-bottom: 12px;
+}
+
+.tip-slide h3 {
+   font-size: 20px;
+   margin-bottom: 8px;
+   color: #1e293b;
+}
+
+.tip-slide p {
+   color: #64748b;
+   font-size: 13px;
+   line-height: 1.7;
+}
+
+.carousel-controls {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin-top: 12px;
+}
+
+.carousel-arrows {
+   display: flex;
+   gap: 8px;
+}
+
+.carousel-arrow {
+   width: 36px;
+   height: 36px;
+   border: none;
+   border-radius: 50%;
+   background: linear-gradient(135deg, #2563eb, #0ea5e9);
+   color: white;
+   font-weight: 800;
+   cursor: pointer;
+}
+
+.tip-dots {
+   display: flex;
+   gap: 8px;
+}
+
+.tip-dot {
+   width: 10px;
+   height: 10px;
+   border-radius: 50%;
+   background: rgba(148,163,184,0.4);
+   border: none;
+   cursor: pointer;
+}
+
+.tip-dot.active {
+   width: 26px;
+   border-radius: 999px;
+   background: linear-gradient(135deg, #2563eb, #0ea5e9);
+}
+
+.modal-backdrop {
+   position: fixed;
+   inset: 0;
+   background: rgba(15,23,42,0.55);
+   display: none;
+   align-items: center;
+   justify-content: center;
+   z-index: 200;
+   padding: 20px;
+}
+
+.modal-backdrop.show {
+   display: flex;
+}
+
+.modal-card {
+   width: min(520px, 100%);
+   background: rgba(255,255,255,0.96);
+   border-radius: 22px;
+   border: 1px solid rgba(148,163,184,0.25);
+   box-shadow: 0 30px 80px rgba(15,23,42,0.18);
+   padding: 24px;
+}
+
+.modal-head {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 12px;
+   margin-bottom: 16px;
+}
+
+.modal-head h3 {
+   font-size: 24px;
+   color: #1e293b;
+}
+
+.close-modal {
+   border: none;
+   background: rgba(148,163,184,0.14);
+   color: #334155;
+   width: 36px;
+   height: 36px;
+   border-radius: 10px;
+   cursor: pointer;
+   font-size: 20px;
+}
+
+.appointment-form {
+   display: grid;
+   gap: 14px;
+}
+
+.appointment-form .field-row {
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+   gap: 12px;
+}
+
+.appointment-form label {
+   display: block;
+   font-size: 12px;
+   font-weight: 700;
+   color: #475569;
+   margin-bottom: 7px;
+}
+
+.appointment-form input,
+.appointment-form select,
+.appointment-form textarea {
+   width: 100%;
+   padding: 12px 13px;
+   border-radius: 12px;
+   border: 1px solid #dbe3ef;
+   background: #f8fafc;
+   color: #1e293b;
+   outline: none;
+}
+
+.appointment-form textarea {
+   min-height: 86px;
+   resize: vertical;
+}
+
+.modal-actions {
+   display: flex;
+   justify-content: flex-end;
+   gap: 10px;
+   margin-top: 8px;
+}
+
+.modal-actions .btn {
+   padding: 12px 16px;
+   border-radius: 12px;
+   border: none;
+   font-weight: 800;
+   cursor: pointer;
+}
+
+.modal-actions .btn-secondary {
+   background: rgba(148,163,184,0.12);
+   color: #334155;
+}
+
+.modal-actions .btn-primary {
+   background: linear-gradient(135deg, #2563eb, #0ea5e9);
+   color: white;
+}
+
+/* =========================================================
+   REPORTS
+========================================================= */
+
+.reports-grid {
+   display: grid;
+   grid-template-columns: 1fr;
+   gap: 14px;
+}
+
+.report-item {
+   background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(20,184,166,0.08));
+   border: 1px solid rgba(59,130,246,0.18);
+   border-radius: 18px;
+   padding: 16px;
+   transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.report-item:hover {
+   transform: translateY(-3px);
+   box-shadow: 0 16px 30px rgba(37,99,235,0.12);
+}
+
+.report-top {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 10px;
+   margin-bottom: 10px;
+}
+
+.report-badge {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   padding: 6px 10px;
+   border-radius: 999px;
+   font-size: 11px;
+   font-weight: 800;
+}
+
+.report-badge.blood {
+   background: rgba(239,68,68,0.12);
+   color: #b91c1c;
+}
+
+.report-badge.ecg {
+   background: rgba(14,165,233,0.12);
+   color: #0369a1;
+}
+
+.report-badge.xray {
+   background: rgba(16,185,129,0.12);
+   color: #047857;
+}
+
+.report-date {
+   color: #64748b;
+   font-size: 11px;
+   font-weight: 700;
+}
+
+.report-item h3 {
+   font-size: 17px;
+   margin-bottom: 8px;
+   color: #1e293b;
+}
+
+.report-item p {
+   color: #64748b;
+   font-size: 12px;
+   line-height: 1.6;
+   margin-bottom: 12px;
+}
+
+.report-actions {
+   display: flex;
+   gap: 10px;
+   flex-wrap: wrap;
+}
+
+.mini-btn {
+   border: none;
+   border-radius: 10px;
+   padding: 8px 12px;
+   text-decoration: none;
+   font-size: 12px;
+   font-weight: 800;
+   cursor: pointer;
+   transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mini-btn:hover {
+   transform: translateY(-1px);
+}
+
+.mini-btn.primary {
+   background: linear-gradient(135deg, #2563eb, #0ea5e9);
+   color: white;
+}
+
+.mini-btn.success {
+   background: linear-gradient(135deg, #10b981, #14b8a6);
+   color: white;
+}
+
+.emergency-card {
+   background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(59,130,246,0.08));
+   border: 1px solid rgba(239,68,68,0.22);
+}
+
+.emergency-card .card-title h2 {
+   color: #b91c1c;
+}
+
+.emergency-avatar {
+   width: 72px;
+   height: 72px;
+   border-radius: 24px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   font-size: 32px;
+   margin: 8px auto 14px;
+   background: linear-gradient(135deg, #ef4444, #f97316);
+   box-shadow: 0 16px 28px rgba(239,68,68,0.25);
+}
+
+.emergency-number {
+   text-align: center;
+   font-size: 30px;
+   font-weight: 900;
+   color: #ef4444;
+   letter-spacing: 0.04em;
+   margin-bottom: 8px;
+}
+
+.emergency-card p {
+   color: #64748b;
+   font-size: 12px;
+   line-height: 1.7;
+   text-align: center;
+   margin-bottom: 14px;
+}
+
+.emergency-call {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   width: 100%;
+   padding: 13px 14px;
+   border-radius: 12px;
+   background: linear-gradient(135deg, #ef4444, #dc2626);
+   color: white;
+   text-decoration: none;
+   font-weight: 800;
+   box-shadow: 0 12px 24px rgba(239,68,68,0.24);
+}
+
+/* =========================================================
+   REMINDER
+========================================================= */
+
+.reminder-item {
+
+   background: #f8fafc;
+
+   padding: 12px;
+
+   border-radius: 12px;
+
+   margin-top: 10px;
+
+}
+
+
+.reminder-item strong {
+
+    color: #334155;
+
+}
+
+
+.reminder-item small {
+
+    display: block;
+
+    color: #94a3b8;
+
+    margin-top: 4px;
+
+}
+
+
+/* =========================================================
+   HOSPITAL
+========================================================= */
+
+.hospital-card {
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff1f2,
+            #fef2f2
+        );
+
+    border-left:
+        5px solid
+        #ef4444;
+
+}
+
+
+.hospital-btn {
+
+    width: 100%;
+
+    padding: 13px;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ef4444,
+            #dc2626
+        );
+
+    color: white;
+
+    margin-top: 12px;
+
+    font-weight: 800;
+
+}
+
+
+/* =========================================================
+   DISCLAIMER
+========================================================= */
+
+.disclaimer {
+
+    background:
+        #fff7ed;
+
+    border-left:
+        5px solid
+        #f97316;
+
+    color:
+        #7c2d12;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer {
+
+    text-align: center;
+
+    padding: 30px;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+}
+
+body[data-theme="dark"] {
+   background:
+       radial-gradient(circle at top left, rgba(59,130,246,.18), transparent 25%),
+       radial-gradient(circle at bottom right, rgba(16,185,129,.14), transparent 35%),
+       linear-gradient(135deg, #020817 0%, #0f172a 35%, #111827 100%);
+}
+
+body[data-theme="dark"] .welcome,
+body[data-theme="dark"] .feature,
+body[data-theme="dark"] .card,
+body[data-theme="dark"] .history-item,
+body[data-theme="dark"] .analysis-content,
+body[data-theme="dark"] .specialist,
+body[data-theme="dark"] .risk-box,
+body[data-theme="dark"] .bmi-result,
+body[data-theme="dark"] .reminder-item,
+body[data-theme="dark"] .disclaimer,
+body[data-theme="dark"] .loading {
+   background: var(--panel);
+   color: var(--text);
+   border-color: var(--border);
+   box-shadow: var(--shadow);
+}
+
+body[data-theme="dark"] .welcome h2,
+body[data-theme="dark"] .feature h3,
+body[data-theme="dark"] .card-title h2,
+body[data-theme="dark"] .profile-name,
+body[data-theme="dark"] .profile-value,
+body[data-theme="dark"] .analysis-content,
+body[data-theme="dark"] .specialist strong,
+body[data-theme="dark"] .history-item strong,
+body[data-theme="dark"] .reminder-item strong,
+body[data-theme="dark"] .bmi-number {
+   color: var(--text);
+}
+
+body[data-theme="dark"] .welcome p,
+body[data-theme="dark"] .feature p,
+body[data-theme="dark"] .profile-label,
+body[data-theme="dark"] .history-date,
+body[data-theme="dark"] .analysis-content,
+body[data-theme="dark"] .footer,
+body[data-theme="dark"] .form-group label,
+body[data-theme="dark"] .disclaimer,
+body[data-theme="dark"] .reminder-item small,
+body[data-theme="dark"] .profile-row {
+   color: var(--text-soft);
+}
+
+body[data-theme="dark"] input,
+body[data-theme="dark"] select,
+body[data-theme="dark"] textarea {
+   background: #0b1220;
+   border-color: var(--border);
+   color: var(--text);
+}
+
+body[data-theme="dark"] .lang-btn,
+body[data-theme="dark"] .lang-btn.active {
+   border: 1px solid var(--border);
+}
+
+body[data-theme="dark"] .lang-btn:not(.active) {
+   background: rgba(15,23,42,0.8);
+   color: var(--text);
+}
+
+body[data-theme="dark"] .btn-primary,
+body[data-theme="dark"] .btn-green,
+body[data-theme="dark"] .btn-red,
+body[data-theme="dark"] .btn-purple,
+body[data-theme="dark"] .btn-orange,
+body[data-theme="dark"] .logout,
+body[data-theme="dark"] .header {
+   box-shadow: 0 12px 30px rgba(12, 18, 31, 0.44);
+}
+
+body[data-theme="dark"] .history-item,
+body[data-theme="dark"] .reminder-item,
+body[data-theme="dark"] .specialist,
+body[data-theme="dark"] .disclaimer,
+body[data-theme="dark"] .loading,
+body[data-theme="dark"] .risk-box,
+body[data-theme="dark"] .badge {
+   border: 1px solid var(--border);
+}
+
+body[data-theme="dark"] .badge.low {
+   background: rgba(34,197,94,0.15);
+   color: #86efac;
+}
+
+body[data-theme="dark"] .badge.medium {
+   background: rgba(245,158,11,0.15);
+   color: #fbbf24;
+}
+
+body[data-theme="dark"] .badge.high {
+   background: rgba(239,68,68,0.12);
+   color: #fca5a5;
+}
+
+body[data-theme="dark"] .loading {
+   background: rgba(30,64,175,0.18);
+   color: #bfdbfe;
+}
+
+body[data-theme="dark"] .analysis-content {
+   background: transparent;
+}
+
+body[data-theme="dark"] .appointment-card,
+body[data-theme="dark"] .report-item,
+body[data-theme="dark"] .score-card,
+body[data-theme="dark"] .quick-panel,
+body[data-theme="dark"] .care-member,
+body[data-theme="dark"] .care-team-card {
+   background: linear-gradient(135deg, rgba(37,99,235,0.15), rgba(20,184,166,0.12));
+   border-color: rgba(96,165,250,0.18);
+}
+
+body[data-theme="dark"] .doctor-name,
+body[data-theme="dark"] .report-item h3,
+body[data-theme="dark"] .score-copy h3,
+body[data-theme="dark"] .care-member strong {
+   color: var(--text);
+}
+
+body[data-theme="dark"] .score-copy p,
+body[data-theme="dark"] .care-member span,
+body[data-theme="dark"] .quick-stat,
+body[data-theme="dark"] .quick-stat strong {
+   color: var(--text-soft);
+}
+
+body[data-theme="dark"] .appointment-meta,
+body[data-theme="dark"] .appointment-status,
+body[data-theme="dark"] .report-date,
+body[data-theme="dark"] .report-item p,
+body[data-theme="dark"] .emergency-card p {
+   color: var(--text-soft);
+}
+
+body[data-theme="dark"] .report-item p,
+body[data-theme="dark"] .report-date,
+body[data-theme="dark"] .emergency-card p {
+   color: var(--text-soft);
+}
+
+body[data-theme="dark"] .report-badge.blood {
+   background: rgba(248,113,113,0.16);
+   color: #fca5a5;
+}
+
+body[data-theme="dark"] .report-badge.ecg {
+   background: rgba(56,189,248,0.12);
+   color: #7dd3fc;
+}
+
+body[data-theme="dark"] .report-badge.xray {
+   background: rgba(45,212,191,0.12);
+   color: #99f6e4;
+}
+
+body[data-theme="dark"] .emergency-card {
+   background: linear-gradient(135deg, rgba(239,68,68,0.14), rgba(59,130,246,0.12));
+   border-color: rgba(248,113,113,0.18);
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width: 1000px) {
+
+    .features {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+    .main-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+}
+
+
+@media(max-width: 650px) {
+
+    .header-content {
+
+        flex-direction:
+            column;
+
+        align-items:
+            flex-start;
+
+    }
+
+    .features {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+    .form-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+    .risk-panel {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+    .container {
+
+        width: 95%;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- ======================================================
+     HEADER
+======================================================= -->
+
+<header class="header">
+
+    <div class="header-content">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                🌿
+            </div>
+
+            <div>
+
+                <h1>
+                    MedGuardian AI
+                </h1>
+
+                <p>
+                    Smart Healthcare Assistant • Tamil + English
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-actions">
+            <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                🌙 Dark
+            </button>
+
+            <a
+                href="/logout"
+                class="logout"
+            >
+                Logout
+            </a>
+        </div>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+
+<!-- ======================================================
+     WELCOME
+======================================================= -->
+
+<section class="welcome">
+
+    <div class="welcome-header">
+       <div>
+           <h2>
+               👋 Welcome, {{ user_name }}
+           </h2>
+
+           <p>
+               Your personal AI-assisted healthcare dashboard
+               is ready.
+           </p>
+       </div>
+    </div>
+
+    <div class="welcome-insights">
+       <div class="score-card">
+           <div class="score-ring" aria-label="Health score">
+               <div class="score-inner">
+                   <strong id="healthScoreValue">88</strong>
+                   <small>/100</small>
+               </div>
+           </div>
+           <div class="score-copy">
+               <h3>Health score</h3>
+               <p>Your wellness pattern looks stable this week. Recovery, hydration, and activity are all trending in a good direction.</p>
+           </div>
+       </div>
+
+       <div class="quick-panel">
+           <div class="quick-stat"><span>Appointments</span><strong>2 booked</strong></div>
+           <div class="quick-stat"><span>Reports</span><strong>3 ready</strong></div>
+           <div class="quick-stat"><span>Recovery</span><strong>Good</strong></div>
+       </div>
+    </div>
+
+</section>
+
+
+<!-- ======================================================
+     FEATURES
+======================================================= -->
+
+<section class="features">
+
+    <div class="feature">
+
+        <div class="feature-icon">
+            🤖
+        </div>
+
+        <h3>
+            AI Analysis
+        </h3>
+
+        <p>
+            Gemini-powered health information
+        </p>
+
+    </div>
+
+
+    <div class="feature">
+
+        <div class="feature-icon">
+            📊
+        </div>
+
+        <h3>
+            Smart Triage
+        </h3>
+
+        <p>
+            Risk-level assessment
+        </p>
+
+    </div>
+
+
+    <div class="feature">
+
+        <div class="feature-icon">
+            👨‍⚕️
+        </div>
+
+        <h3>
+            Specialist
+        </h3>
+
+        <p>
+            AI-assisted recommendation
+        </p>
+
+    </div>
+
+
+    <div class="feature">
+
+        <div class="feature-icon">
+            📄
+        </div>
+
+        <h3>
+            Health Report
+        </h3>
+
+        <p>
+            Download consultation report
+        </p>
+
+    </div>
+
+</section>
+
+
+<div class="main-grid">
+
+
+<!-- ======================================================
+     LEFT
+======================================================= -->
+
+<div>
+
+
+<section class="card">
+
+    <div class="card-title">
+
+        <h2>
+            🩺 Patient Health Assessment
+        </h2>
+
+    </div>
+
+
+    <div class="language-buttons">
+
+        <button
+            class="lang-btn active"
+            onclick="setLanguage('en-IN', this)"
+        >
+            🇬🇧 English
+        </button>
+
+        <button
+            class="lang-btn"
+            onclick="setLanguage('ta-IN', this)"
+        >
+            🇮🇳 தமிழ்
+        </button>
+
+    </div>
+
+
+    <div class="form-grid">
+
+
+        <div class="form-group">
+
+            <label>
+                Age
+            </label>
+
+            <input
+                id="age"
+                type="number"
+                value="{{ patient['age'] if patient and patient['age'] else '' }}"
+                placeholder="Example: 21"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Gender
+            </label>
+
+            <select id="gender">
+
+                <option value="">
+                    Select gender
+                </option>
+
+                <option value="Male"
+                {% if patient and patient['gender'] == 'Male' %}selected{% endif %}>
+                    Male
+                </option>
+
+                <option value="Female"
+                {% if patient and patient['gender'] == 'Female' %}selected{% endif %}>
+                    Female
+                </option>
+
+                <option value="Other">
+                    Other
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                🌡️ Temperature (°F)
+            </label>
+
+            <input
+                id="temperature"
+                type="number"
+                step="0.1"
+                placeholder="Example: 102"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                ⏱️ Duration
+            </label>
+
+            <input
+                id="duration"
+                type="text"
+                placeholder="Example: 3 days"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                ⚠️ Severity
+            </label>
+
+            <select id="severity">
+
+                <option value="">
+                    Select severity
+                </option>
+
+                <option value="Mild">
+                    Mild
+                </option>
+
+                <option value="Moderate">
+                    Moderate
+                </option>
+
+                <option value="Severe">
+                    Severe
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                🔎 Main Symptom
+            </label>
+
+            <input
+                id="main_symptom"
+                type="text"
+                placeholder="Example: Fever"
+            >
+
+        </div>
+
+
+        <div class="form-group full">
+
+            <label>
+                📝 Describe Your Symptoms
+            </label>
+
+            <textarea
+                id="symptoms"
+                placeholder="Example: I have fever, throat pain and leg pain for 3 days..."
+            ></textarea>
+
+        </div>
+
+    </div>
+
+
+    <div class="buttons">
+
+        <button
+            class="btn btn-purple"
+            onclick="startVoice()"
+        >
+            🎤 Speak
+        </button>
+
+
+        <button
+            class="btn btn-primary"
+            id="askBtn"
+            onclick="askAI()"
+        >
+            🤖 Ask AI
+        </button>
+
+
+        <button
+            class="btn btn-green"
+            onclick="readAnswer()"
+        >
+            🔊 Read Answer
+        </button>
+
+
+        <button
+            class="btn btn-orange"
+            onclick="startVoiceChat()"
+        >
+            🗣️ Voice Chat
+        </button>
+
+
+        <button
+            class="btn btn-red"
+            onclick="stopVoice()"
+        >
+            ⛔ Stop Voice
+        </button>
+
+
+        <button
+            class="btn btn-red"
+            onclick="clearForm()"
+        >
+            ✕ Clear
+        </button>
+
+    </div>
+
+
+    <div
+        class="loading"
+        id="loading"
+    >
+        ⏳ MedGuardian AI is analysing your information...
+    </div>
+
+    <div class="error-box" id="errorBox">
+        <span>⚠️</span>
+        <span id="errorText"></span>
+    </div>
+
+</section>
+
+
+<!-- ======================================================
+     ANALYSIS
+======================================================= -->
+
+<section
+    class="card analysis"
+    id="analysis"
+>
+
+    <div class="card-title">
+
+        <h2>
+            🧠 AI Analysis
+        </h2>
+
+    </div>
+
+
+    <div
+        class="analysis-content"
+        id="analysisText"
+    ></div>
+
+
+    <br>
+
+
+    <div
+        class="risk-panel"
+        id="riskPanel"
+    >
+
+        <div
+            class="risk-box medium"
+            id="riskBox"
+        >
+
+            <div>
+                Risk Level
+            </div>
+
+            <div
+                class="risk-level"
+                id="riskLevel"
+            >
+                MEDIUM
+            </div>
+
+            <div
+                class="risk-message"
+                id="riskText"
+            ></div>
+
+        </div>
+
+
+        <div class="chart-wrapper">
+
+            <canvas
+                id="riskChart"
+                width="220"
+                height="220"
+            ></canvas>
+
+        </div>
+
+    </div>
+
+
+    <br>
+
+
+    <div
+        class="specialist"
+        id="specialistBox"
+    >
+
+        👨‍⚕️
+
+        <strong>
+            Recommended Specialist:
+        </strong>
+
+        <span id="specialist">
+            General Physician
+        </span>
+
+    </div>
+
+
+    <br>
+
+
+    <div class="buttons">
+
+        <a
+            href="/download-report"
+            class="btn btn-green"
+        >
+            📄 Download Health Report
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- ======================================================
+     HISTORY
+======================================================= -->
+
+<section class="card">
+
+    <div class="card-title">
+
+        <h2>
+            🕘 Recent Consultations
+        </h2>
+
+        <button
+            class="btn btn-primary"
+            onclick="loadHistory()"
+        >
+            Refresh
+        </button>
+
+    </div>
+
+
+    <div id="historyList">
+
+        {% if consultations %}
+
+            {% for item in consultations %}
+
+                <div class="history-item">
+
+                    <div class="history-top">
+
+                        <strong>
+                            {{ item['question'][:100] }}
+                        </strong>
+
+                        <span
+                            class="badge {{ item['risk_level']|lower }}"
+                        >
+                            {{ item['risk_level'] }}
+                        </span>
+
+                    </div>
+
+                    <div class="history-date">
+
+                        {{ item['created_at'] }}
+
+                        •
+
+                        {{ item['specialist'] }}
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>
+                No consultations yet.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+
+</div>
+
+
+<!-- ======================================================
+     RIGHT SIDEBAR
+======================================================= -->
+
+<div>
+
+
+<!-- PROFILE -->
+
+<section class="card profile">
+
+    <div class="card-title">
+
+        <h2>
+            👤 Patient Profile
+        </h2>
+
+    </div>
+
+
+    <div class="profile-name">
+
+        {{ patient['name'] if patient else user_name }}
+
+    </div>
+
+
+    <div class="profile-row">
+
+        <span class="profile-label">
+            Email
+        </span>
+
+        <span class="profile-value">
+
+            {{ patient['email'] if patient else '-' }}
+
+        </span>
+
+    </div>
+
+
+    <div class="profile-row">
+
+        <span class="profile-label">
+            Age
+        </span>
+
+        <span class="profile-value">
+
+            {{ patient['age'] if patient and patient['age'] else '-' }}
+
+        </span>
+
+    </div>
+
+
+    <div class="profile-row">
+
+        <span class="profile-label">
+            Gender
+        </span>
+
+        <span class="profile-value">
+
+            {{ patient['gender'] if patient and patient['gender'] else '-' }}
+
+        </span>
+
+    </div>
+
+
+    <div class="profile-row">
+
+        <span class="profile-label">
+            Status
+        </span>
+
+        <span class="profile-value">
+            🟢 Active
+        </span>
+
+    </div>
+
+</section>
+
+<section class="card care-team-card">
+    <div class="card-title">
+        <h2>🩺 Care Team</h2>
+    </div>
+
+    <div class="care-team-list">
+        <div class="care-member">
+            <div class="care-avatar">KN</div>
+            <div>
+                <strong>Dr. Kavya Nair</strong>
+                <span>General Physician</span>
+            </div>
+        </div>
+        <div class="care-member">
+            <div class="care-avatar alt">RI</div>
+            <div>
+                <strong>Dr. Raman Iyer</strong>
+                <span>Cardiology</span>
+            </div>
+        </div>
+        <div class="care-member">
+            <div class="care-avatar soft">AN</div>
+            <div>
+                <strong>Dr. Ananya Sen</strong>
+                <span>Wellness Coach</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- BMI -->
+
+<section class="card">
+
+    <div class="card-title">
+
+        <h2>
+            ⚖️ BMI Calculator
+        </h2>
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Weight (kg)
+        </label>
+
+        <input
+            id="weight"
+            type="number"
+            placeholder="Example: 65"
+        >
+
+    </div>
+
+
+    <br>
+
+
+    <div class="form-group">
+
+        <label>
+            Height (cm)
+        </label>
+
+        <input
+            id="height"
+            type="number"
+            placeholder="Example: 170"
+        >
+
+    </div>
+
+
+    <br>
+
+
+    <button
+        class="btn btn-primary"
+        style="width:100%;"
+        onclick="calculateBMI()"
+    >
+        Calculate BMI
+    </button>
+
+
+    <div
+        class="bmi-result"
+        id="bmiResult"
+    >
+
+        <div>
+            Your BMI
+        </div>
+
+        <div
+            class="bmi-number"
+            id="bmiNumber"
+        >
+            0
+        </div>
+
+        <strong id="bmiCategory">
+            -
+        </strong>
+
+    </div>
+
+</section>
+
+
+<!-- APPOINTMENTS -->
+
+<section class="card">
+
+    <div class="card-title">
+
+        <h2>
+            📅 Doctor Appointments
+        </h2>
+
+    </div>
+
+    <div class="appointment-list">
+
+        <div class="appointment-card">
+            <div class="appointment-head">
+                <div class="doctor-name">Dr. Kavya Nair</div>
+                <span class="appointment-status">Confirmed</span>
+            </div>
+            <div class="appointment-meta">
+                General Physician<br>
+                25 Aug 2026 • 10:30 AM
+            </div>
+            <div class="appointment-actions">
+                <button class="appointment-btn primary" type="button">Join Video</button>
+                <button class="appointment-btn secondary" type="button">Reschedule</button>
+            </div>
+        </div>
+
+        <div class="appointment-card">
+            <div class="appointment-head">
+                <div class="doctor-name">Dr. Raman Iyer</div>
+                <span class="appointment-status">Pending</span>
+            </div>
+            <div class="appointment-meta">
+                Cardiology Consultant<br>
+                02 Sep 2026 • 2:15 PM
+            </div>
+            <div class="appointment-actions">
+                <button class="appointment-btn primary" type="button">Confirm</button>
+                <button class="appointment-btn secondary" type="button">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="buttons" style="margin-top:16px;">
+            <button class="btn btn-primary" type="button" id="openBookingModal">📅 Book Appointment</button>
+    </div>
+
+</section>
+
+<section class="card">
+    <div class="card-title">
+            <h2>📈 Health Trends</h2>
+    </div>
+
+    <div class="insight-grid">
+            <div class="stat-card">
+                <span class="label">Steps</span>
+                <div class="value">8.4k</div>
+                <span class="delta">+12% this week</span>
+            </div>
+            <div class="stat-card">
+                <span class="label">Sleep</span>
+                <div class="value">7.6h</div>
+                <span class="delta">+1.2h avg</span>
+            </div>
+            <div class="stat-card">
+                <span class="label">Hydration</span>
+                <div class="value">2.1L</div>
+                <span class="delta">On target</span>
+            </div>
+    </div>
+
+    <div class="trend-panel">
+            <canvas id="healthTrendChart" class="trend-chart" width="640" height="180"></canvas>
+            <div class="chart-legend">
+                <span><i style="background:#2563eb;"></i> Recovery</span>
+                <span><i style="background:#14b8a6;"></i> Activity</span>
+            </div>
+    </div>
+</section>
+
+<section class="card">
+    <div class="card-title">
+            <h2>🔔 Notifications</h2>
+    </div>
+
+    <div class="notification-list">
+            <div class="notification-item">
+                <div class="notification-icon">🩺</div>
+                <div>
+                    <strong>Lab results ready</strong>
+                    <p>Your blood test report has been uploaded and is ready to review.</p>
+                </div>
+            </div>
+            <div class="notification-item">
+                <div class="notification-icon">💊</div>
+                <div>
+                    <strong>Medicine reminder</strong>
+                    <p>Take your Vitamin D dose in 30 minutes.</p>
+                </div>
+            </div>
+            <div class="notification-item">
+                <div class="notification-icon">📅</div>
+                <div>
+                    <strong>Follow-up visit</strong>
+                    <p>Your next consultation with Dr. Kavya is scheduled for tomorrow.</p>
+                </div>
+            </div>
+    </div>
+</section>
+
+<!-- REPORTS -->
+
+<section class="card reports-card">
+
+    <div class="card-title">
+
+        <h2>
+            🩺 Reports Center
+        </h2>
+
+    </div>
+
+    <div class="reports-grid">
+
+        <div class="report-item">
+            <div class="report-top">
+                <span class="report-badge blood">Blood</span>
+                <span class="report-date">12 Apr 2026</span>
+            </div>
+            <h3>Blood Test Reports</h3>
+            <p>Hb, CBC, Vitamin D, Thyroid panel</p>
+            <div class="report-actions">
+                <button class="mini-btn primary" type="button" onclick="window.open('/download-report', '_blank')">View</button>
+                <a class="mini-btn success" href="/download-report" target="_blank" download>Download</a>
+            </div>
+        </div>
+
+        <div class="report-item">
+            <div class="report-top">
+                <span class="report-badge ecg">ECG</span>
+                <span class="report-date">08 Apr 2026</span>
+            </div>
+            <h3>ECG Reports</h3>
+            <p>Heart rhythm overview and cardiac summary</p>
+            <div class="report-actions">
+                <button class="mini-btn primary" type="button" onclick="window.open('/download-report', '_blank')">View</button>
+                <a class="mini-btn success" href="/download-report" target="_blank" download>Download</a>
+            </div>
+        </div>
+
+        <div class="report-item">
+            <div class="report-top">
+                <span class="report-badge xray">X-Ray</span>
+                <span class="report-date">03 Apr 2026</span>
+            </div>
+            <h3>X-Ray Reports</h3>
+            <p>Chest and skeletal imaging summary</p>
+            <div class="report-actions">
+                <button class="mini-btn primary" type="button" onclick="window.open('/download-report', '_blank')">View</button>
+                <a class="mini-btn success" href="/download-report" target="_blank" download>Download</a>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- EMERGENCY CONTACT -->
+
+<section class="card emergency-card">
+
+    <div class="card-title">
+
+        <h2>
+            🚨 Emergency Contact
+        </h2>
+
+    </div>
+
+    <div class="emergency-avatar">☎️</div>
+
+    <div class="emergency-number">+91 112</div>
+
+    <p>
+        Need urgent help? Connect to emergency services instantly for immediate assistance.
+    </p>
+
+    <a class="emergency-call" href="tel:+91112">
+        📞 Call Now
+    </a>
+
+</section>
+
+<section class="card">
+    <div class="card-title">
+        <h2>💡 Medical Tips</h2>
+    </div>
+
+    <div class="tips-carousel" id="tipsCarousel">
+        <div class="tip-slide active">
+            <div class="tip-icon">💧</div>
+            <h3>Hydration Matters</h3>
+            <p>Drink enough water throughout the day to support recovery, focus, and healthy blood flow.</p>
+        </div>
+        <div class="tip-slide">
+            <div class="tip-icon">🧘</div>
+            <h3>Stress Management</h3>
+            <p>Short breathing exercises and regular walks can help lower stress and improve sleep quality.</p>
+        </div>
+        <div class="tip-slide">
+            <div class="tip-icon">🥗</div>
+            <h3>Balanced Nutrition</h3>
+            <p>Meals rich in fiber, protein, and greens support energy and long-term wellness.</p>
+        </div>
+    </div>
+
+    <div class="carousel-controls">
+        <div class="carousel-arrows">
+            <button type="button" class="carousel-arrow" id="prevTip" aria-label="Previous tip">←</button>
+            <button type="button" class="carousel-arrow" id="nextTip" aria-label="Next tip">→</button>
+        </div>
+        <div class="tip-dots" aria-label="Tip navigation">
+            <button type="button" class="tip-dot active" aria-label="Tip 1"></button>
+            <button type="button" class="tip-dot" aria-label="Tip 2"></button>
+            <button type="button" class="tip-dot" aria-label="Tip 3"></button>
+        </div>
+    </div>
+</section>
+
+<!-- MEDICINE REMINDER -->
+
+<section class="card">
+
+    <div class="card-title">
+
+        <h2>
+            💊 Medicine Reminder
+        </h2>
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Medicine Name
+        </label>
+
+        <input
+            id="medicineName"
+            type="text"
+            placeholder="Medicine name"
+        >
+
+    </div>
+
+
+    <br>
+
+
+    <div class="form-group">
+
+        <label>
+            Reminder Time
+        </label>
+
+        <input
+            id="reminderTime"
+            type="time"
+        >
+
+    </div>
+
+
+    <br>
+
+
+    <button
+        class="btn btn-purple"
+        style="width:100%;"
+        onclick="setReminder()"
+    >
+        ⏰ Set Reminder
+    </button>
+
+
+    <div id="reminderList">
+
+        {% for reminder in reminders %}
+
+            <div class="reminder-item">
+
+                <strong>
+                    💊 {{ reminder['medicine_name'] }}
+                </strong>
+
+                <small>
+                    ⏰ {{ reminder['reminder_time'] }}
+                </small>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<!-- HOSPITAL -->
+
+<section class="card hospital-card">
+
+    <div class="card-title">
+
+        <h2>
+            🏥 Emergency Hospital
+        </h2>
+
+    </div>
+
+
+    <p>
+        Find nearby hospitals using Google Maps.
+    </p>
+
+
+    <button
+        class="hospital-btn"
+        onclick="findHospital()"
+    >
+        🏥 Find Nearby Hospital
+    </button>
+
+</section>
+
+
+<!-- DISCLAIMER -->
+
+<section class="card disclaimer">
+
+    <strong>
+        ⚠️ Medical Disclaimer
+    </strong>
+
+    <br><br>
+
+    MedGuardian AI provides general healthcare
+    information for educational purposes only.
+
+    It does not provide a confirmed diagnosis
+    and does not replace a qualified healthcare
+    professional.
+
+    <br><br>
+
+    If symptoms are severe or worsening,
+    seek appropriate medical care.
+
+</section>
+
+
+</div>
+
+</div>
+
+
+</main>
+
+
+<footer class="footer">
+
+    MedGuardian AI © 2026
+
+    <br>
+
+    Smart • Safe • Educational Healthcare Assistant
+
+    <br>
+
+    Created by HARIHARAN.R and BHARATH KRISHNA.S
+
+    <br>
+
+    <a href="/privacy">Privacy Policy</a> • <a href="/terms">Terms of Service</a>
+
+</footer>
+
+
+<script>
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+let selectedLanguage = "en-IN";
+
+let lastAnswer = "";
+
+let recognition = null;
+
+function applyTheme(theme) {
+   const body = document.body;
+   const toggle = document.getElementById("themeToggle");
+
+   if (!body) return;
+
+   body.setAttribute("data-theme", theme);
+
+   if (toggle) {
+       toggle.textContent = theme === "dark" ? "☀️ Light" : "🌙 Dark";
+       toggle.setAttribute("aria-label", theme === "dark" ? "Switch to light mode" : "Switch to dark mode");
+   }
+
+   try {
+       localStorage.setItem("medguardian-theme", theme);
+   } catch (error) {
+       console.warn("Theme preference could not be saved.", error);
+   }
+}
+
+const preferredTheme = (() => {
+   try {
+       const savedTheme = localStorage.getItem("medguardian-theme");
+       if (savedTheme === "dark" || savedTheme === "light") {
+           return savedTheme;
+       }
+   } catch (error) {
+       console.warn("Theme preference could not be read.", error);
+   }
+
+   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+})();
+
+applyTheme(preferredTheme);
+
+document.addEventListener("DOMContentLoaded", () => {
+   const themeToggle = document.getElementById("themeToggle");
+
+   if (themeToggle) {
+       themeToggle.addEventListener("click", () => {
+           const nextTheme = document.body.getAttribute("data-theme") === "dark" ? "light" : "dark";
+           applyTheme(nextTheme);
+       });
+   }
+});
+
+
+/* =========================================================
+   LANGUAGE
+========================================================= */
+
+function setLanguage(language, button) {
+
+    selectedLanguage = language;
+
+    document
+        .querySelectorAll(".lang-btn")
+        .forEach(
+            btn => btn.classList.remove("active")
+        );
+
+    button.classList.add("active");
+
+}
+
+
+/* =========================================================
+   ASK AI
+========================================================= */
+
+async function askAI() {
+
+    const symptoms =
+        document
+            .getElementById("symptoms")
+            .value
+            .trim();
+
+    if (!symptoms) {
+
+        alert(
+            "Please enter your symptoms first."
+        );
+
+        return;
+
+    }
+
+
+    const data = {
+
+        age:
+            document
+                .getElementById("age")
+                .value,
+
+        gender:
+            document
+                .getElementById("gender")
+                .value,
+
+        temperature:
+            document
+                .getElementById("temperature")
+                .value,
+
+        duration:
+            document
+                .getElementById("duration")
+                .value,
+
+        severity:
+            document
+                .getElementById("severity")
+                .value,
+
+        main_symptom:
+            document
+                .getElementById("main_symptom")
+                .value,
+
+        symptoms:
+            symptoms,
+
+        language:
+            selectedLanguage
+
+    };
+
+
+    document
+        .getElementById("loading")
+        .classList.add("show");
+
+
+    document
+        .getElementById("askBtn")
+        .disabled = true;
+
+
+    document
+        .getElementById("askBtn")
+        .innerText =
+            "⏳ Analysing...";
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/ask-ai",
+                {
+
+                    method:
+                        "POST",
+
+                    headers:
+                        {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                    body:
+                        JSON.stringify(data)
+
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (!result.success) {
+
+            alert(
+                result.error ||
+                "Something went wrong."
+            );
+
+            return;
+
+        }
+
+
+        lastAnswer =
+            result.result || "";
+
+
+        document
+            .getElementById("analysisText")
+            .innerText =
+                lastAnswer;
+
+
+        document
+            .getElementById("analysis")
+            .classList.add("show");
+
+
+        updateRisk(
+            result.risk
+        );
+
+
+        document
+            .getElementById("specialist")
+            .innerText =
+                result.specialist;
+
+
+        loadHistory();
+
+
+        window.scrollTo({
+
+            top:
+                document
+                    .getElementById("analysis")
+                    .offsetTop - 20,
+
+            behavior:
+                "smooth"
+
+        });
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to connect to the server."
+        );
+
+    } finally {
+
+        document
+            .getElementById("loading")
+            .classList.remove("show");
+
+
+        document
+            .getElementById("askBtn")
+            .disabled = false;
+
+
+        document
+            .getElementById("askBtn")
+            .innerText =
+                "🤖 Ask AI";
+
+    }
+
+}
+
+
+/* =========================================================
+   RISK + PIE CHART
+========================================================= */
+
+function updateRisk(risk) {
+
+    const riskLevel =
+        document
+            .getElementById("riskLevel");
+
+
+    const riskBox =
+        document
+            .getElementById("riskBox");
+
+
+    risk =
+        (risk || "MEDIUM")
+            .toUpperCase();
+
+
+    riskLevel.innerText =
+        risk;
+
+
+    riskBox.className =
+        "risk-box";
+
+
+    if (risk === "LOW") {
+
+        riskBox.classList.add("low");
+
+    }
+
+    else if (risk === "HIGH") {
+
+        riskBox.classList.add("high");
+
+    }
+
+    else {
+
+        riskBox.classList.add("medium");
+
+    }
+
+
+    drawRiskChart(risk);
+
+}
+
+
+/* =========================================================
+   PIE CHART
+========================================================= */
+
+function drawRiskChart(risk) {
+
+    const canvas =
+        document
+            .getElementById("riskChart");
+
+
+    const ctx =
+        canvas.getContext("2d");
+
+
+    const centerX =
+        canvas.width / 2;
+
+
+    const centerY =
+        canvas.height / 2;
+
+
+    const radius = 85;
+
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    let values;
+
+
+    if (risk === "LOW") {
+
+        values = [
+            75,
+            15,
+            10
+        ];
+
+    }
+
+    else if (risk === "HIGH") {
+
+        values = [
+            10,
+            15,
+            75
+        ];
+
+    }
+
+    else {
+
+        values = [
+            15,
+            70,
+            15
+        ];
+
+    }
+
+
+    const colors = [
+
+        "#22c55e",
+        "#f59e0b",
+        "#ef4444"
+
+    ];
+
+
+    let startAngle =
+        -Math.PI / 2;
+
+
+    values.forEach(
+        (value, index) => {
+
+            const slice =
+                (
+                    value / 100
+                ) *
+                Math.PI *
+                2;
+
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                centerX,
+                centerY
+            );
+
+            ctx.arc(
+
+                centerX,
+                centerY,
+
+                radius,
+
+                startAngle,
+
+                startAngle + slice
+
+            );
+
+            ctx.closePath();
+
+            ctx.fillStyle =
+                colors[index];
+
+            ctx.fill();
+
+            startAngle += slice;
+
+        }
+    );
+
+
+    // CENTER CIRCLE
+
+    ctx.beginPath();
+
+    ctx.arc(
+        centerX,
+        centerY,
+        48,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fillStyle =
+        "#ffffff";
+
+    ctx.fill();
+
+
+    ctx.font =
+        "bold 16px Arial";
+
+    ctx.fillStyle =
+        "#334155";
+
+    ctx.textAlign =
+        "center";
+
+    ctx.textBaseline =
+        "middle";
+
+    ctx.fillText(
+        risk,
+        centerX,
+        centerY
+    );
+
+}
+
+/* =========================================================
+   BMI
+========================================================= */
+
+async function calculateBMI() {
+
+    const weight =
+        parseFloat(
+            document
+                .getElementById("weight")
+                .value
+        );
+
+
+    const height =
+        parseFloat(
+            document
+                .getElementById("height")
+                .value
+        );
+
+
+    if (!weight || !height) {
+
+        alert(
+            "Enter weight and height."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/bmi",
+                {
+
+                    method:
+                        "POST",
+
+                    headers:
+                        {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                    body:
+                        JSON.stringify({
+
+                            weight:
+                                weight,
+
+                            height:
+                                height
+
+                        })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!data.success) {
+
+            alert(data.error);
+
+            return;
+
+        }
+
+
+        document
+            .getElementById("bmiResult")
+            .style.display =
+                "block";
+
+
+        document
+            .getElementById("bmiNumber")
+            .innerText =
+                data.bmi;
+
+
+        document
+            .getElementById("bmiCategory")
+            .innerText =
+                data.category;
+
+
+    } catch (error) {
+
+        alert(
+            "BMI calculation failed."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   MEDICINE REMINDER
+========================================================= */
+
+async function setReminder() {
+
+    const medicine =
+        document
+            .getElementById("medicineName")
+            .value
+            .trim();
+
+
+    const time =
+        document
+            .getElementById("reminderTime")
+            .value;
+
+
+    if (!medicine) {
+
+        alert(
+            "Enter medicine name."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/medicine-reminder",
+                {
+
+                    method:
+                        "POST",
+
+                    headers:
+                        {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                    body:
+                        JSON.stringify({
+
+                            medicine_name:
+                                medicine,
+
+                            reminder_time:
+                                time
+
+                        })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!data.success) {
+
+            alert(data.error);
+
+            return;
+
+        }
+
+
+        const list =
+            document
+                .getElementById("reminderList");
+
+
+        const item =
+            document.createElement("div");
+
+
+        item.className =
+            "reminder-item";
+
+
+        item.innerHTML = `
+
+            <strong>
+                💊 ${medicine}
+            </strong>
+
+            <small>
+                ⏰ ${time || "Time not specified"}
+            </small>
+
+        `;
+
+
+        list.prepend(item);
+
+
+        document
+            .getElementById("medicineName")
+            .value = "";
+
+
+        document
+            .getElementById("reminderTime")
+            .value = "";
+
+
+        alert(
+            "Reminder saved successfully."
+        );
+
+
+    } catch (error) {
+
+        alert(
+            "Unable to save reminder."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+async function loadHistory() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/history"
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!data.success) {
+
+            return;
+
+        }
+
+
+        const list =
+            document
+                .getElementById("historyList");
+
+
+        if (!data.history.length) {
+
+            list.innerHTML =
+                "<p>No consultations yet.</p>";
+
+            return;
+
+        }
+
+
+        list.innerHTML = "";
+
+
+        data.history.forEach(
+            item => {
+
+                const div =
+                    document
+                        .createElement("div");
+
+
+                div.className =
+                    "history-item";
+
+
+                const risk =
+                    (
+                        item.risk_level ||
+                        "MEDIUM"
+                    ).toLowerCase();
+
+
+                div.innerHTML = `
+
+                    <div class="history-top">
+
+                        <strong>
+                            ${(item.question || "")
+                                .substring(0, 100)}
+                        </strong>
+
+                        <span class="badge ${risk}">
+                            ${item.risk_level}
+                        </span>
+
+                    </div>
+
+                    <div class="history-date">
+
+                        ${item.created_at}
+
+                        •
+
+                        ${item.specialist}
+
+                    </div>
+
+                `;
+
+
+                list.appendChild(div);
+
+            }
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "History error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   VOICE INPUT
+========================================================= */
+
+function startVoice() {
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+
+    if (!SpeechRecognition) {
+
+        alert(
+            "Voice recognition is not supported in this browser."
+        );
+
+        return;
+
+    }
+
+
+    recognition =
+        new SpeechRecognition();
+
+
+    recognition.lang =
+        selectedLanguage === "ta-IN"
+            ? "ta-IN"
+            : "en-IN";
+
+
+    recognition.continuous =
+        false;
+
+
+    recognition.interimResults =
+        false;
+
+
+    recognition.onresult =
+        function(event) {
+
+            const text =
+                event.results[0][0].transcript;
+
+            const textarea =
+                document
+                    .getElementById("symptoms");
+
+            if (textarea.value) {
+
+                textarea.value +=
+                    " " + text;
+
+            } else {
+
+                textarea.value =
+                    text;
+
+            }
+
+        };
+
+
+    recognition.onerror =
+        function(event) {
+
+            console.error(
+                event.error
+            );
+
+        };
+
+
+    recognition.start();
+
+}
+
+
+/* =========================================================
+   VOICE CHAT
+========================================================= */
+
+function startVoiceChat() {
+
+    startVoice();
+
+}
+
+
+/* =========================================================
+   STOP VOICE
+========================================================= */
+
+function stopVoice() {
+
+    if (recognition) {
+
+        recognition.stop();
+
+        recognition = null;
+
+    }
+
+
+    if (
+        window.speechSynthesis
+    ) {
+
+        window.speechSynthesis.cancel();
+
+    }
+
+}
+
+
+/* =========================================================
+   READ ANSWER
+========================================================= */
+
+function readAnswer() {
+
+    if (!lastAnswer) {
+
+        alert(
+            "Please analyse your symptoms first."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !window.speechSynthesis
+    ) {
+
+        alert(
+            "Text-to-speech is not supported."
+        );
+
+        return;
+
+    }
+
+
+    window.speechSynthesis.cancel();
+
+
+    const speech =
+        new SpeechSynthesisUtterance(
+            lastAnswer
+        );
+
+
+    speech.lang =
+        selectedLanguage === "ta-IN"
+            ? "ta-IN"
+            : "en-IN";
+
+
+    speech.rate =
+        0.9;
+
+
+    window.speechSynthesis.speak(
+        speech
+    );
+
+}
+
+
+/* =========================================================
+   CLEAR
+========================================================= */
+
+function clearForm() {
+
+    document
+        .getElementById("temperature")
+        .value = "";
+
+
+    document
+        .getElementById("duration")
+        .value = "";
+
+
+    document
+        .getElementById("severity")
+        .value = "";
+
+
+    document
+        .getElementById("main_symptom")
+        .value = "";
+
+
+    document
+        .getElementById("symptoms")
+        .value = "";
+
+
+    document
+        .getElementById("analysis")
+        .classList.remove("show");
+
+
+    lastAnswer = "";
+
+
+    stopVoice();
+
+}
+
+
+/* =========================================================
+   HOSPITAL FINDER
+========================================================= */
+
+function findHospital() {
+
+    if (
+        navigator.geolocation
+    ) {
+
+        navigator.geolocation.getCurrentPosition(
+
+            function(position) {
+
+                const lat =
+                    position.coords.latitude;
+
+                const lng =
+                    position.coords.longitude;
+
+
+                const url =
+                    "https://www.google.com/maps/search/?api=1&query=" +
+                    encodeURIComponent(
+                        "hospital near " +
+                        lat +
+                        "," +
+                        lng
+                    );
+
+
+                window.open(
+                    url,
+                    "_blank"
+                );
+
+            },
+
+            function() {
+
+                window.open(
+
+                    "https://www.google.com/maps/search/?api=1&query=emergency+hospital+near+me",
+
+                    "_blank"
+
+                );
+
+            }
+
+        );
+
+    }
+
+    else {
+
+        window.open(
+
+            "https://www.google.com/maps/search/?api=1&query=emergency+hospital+near+me",
+
+            "_blank"
+
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        drawRiskChart("MEDIUM");
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>

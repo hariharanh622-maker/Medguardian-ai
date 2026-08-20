@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>MedGuardian AI | Profile</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+
+.profile-container{
+
+    max-width:800px;
+
+    margin:40px auto;
+
+}
+
+.profile-header{
+
+    text-align:center;
+
+    margin-bottom:20px;
+
+}
+
+.avatar{
+
+    width:90px;
+
+    height:90px;
+
+    border-radius:50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #7c3aed
+        );
+
+    color:white;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:40px;
+
+    margin:auto;
+
+}
+
+.profile-form{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:15px;
+
+}
+
+.profile-form label{
+
+    display:block;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    margin-bottom:6px;
+
+}
+
+.profile-form input,
+.profile-form select{
+
+    width:100%;
+
+    padding:13px;
+
+    border:1px solid #dbe3ec;
+
+    border-radius:10px;
+
+}
+
+.full{
+
+    grid-column:1 / -1;
+
+}
+
+.save-profile{
+
+    background:#4f46e5;
+
+    color:white;
+
+    border:none;
+
+    padding:13px;
+
+    border-radius:10px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+}
+
+.back-btn{
+
+    display:inline-block;
+
+    margin-top:15px;
+
+    padding:11px 16px;
+
+    background:#64748b;
+
+    color:white;
+
+    border-radius:10px;
+
+}
+
+@media(max-width:600px){
+
+    .profile-form{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .full{
+
+        grid-column:auto;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header class="topbar">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            🛡️
+        </div>
+
+        <div>
+
+            <h1>
+                MedGuardian AI
+            </h1>
+
+            <p>
+                Patient Profile
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="top-actions">
+
+        <a
+            href="/"
+            class="profile-link">
+
+            🏠 Dashboard
+
+        </a>
+
+        <a
+            href="/logout"
+            class="logout-btn">
+
+            Logout
+
+        </a>
+
+    </div>
+
+</header>
+
+
+<div class="profile-container">
+
+
+<section class="card">
+
+    <div class="profile-header">
+
+        <div class="avatar">
+            👤
+        </div>
+
+        <h2>
+            Patient Profile
+        </h2>
+
+        <p>
+            Manage your personal healthcare information.
+        </p>
+
+    </div>
+
+
+    <form
+        action="/update-profile"
+        method="POST"
+        class="profile-form">
+
+
+        <div class="full">
+
+            <label>
+                Full Name
+            </label>
+
+            <input
+                type="text"
+                name="name"
+                value="{{ patient['name'] }}"
+                required>
+
+        </div>
+
+
+        <div>
+
+            <label>
+                Email
+            </label>
+
+            <input
+                type="email"
+                value="{{ patient['email'] }}"
+                disabled>
+
+        </div>
+
+
+        <div>
+
+            <label>
+                Phone
+            </label>
+
+            <input
+                type="text"
+                name="phone"
+                value="{{ patient['phone'] or '' }}"
+                placeholder="Phone number">
+
+        </div>
+
+
+        <div>
+
+            <label>
+                Age
+            </label>
+
+            <input
+                type="number"
+                name="age"
+                min="1"
+                max="120"
+                value="{{ patient['age'] or '' }}"
+                placeholder="Age">
+
+        </div>
+
+
+        <div>
+
+            <label>
+                Gender
+            </label>
+
+            <select name="gender">
+
+                <option value="">
+                    Select gender
+                </option>
+
+                <option
+                    value="Male"
+                    {% if patient['gender'] == 'Male' %}selected{% endif %}>
+                    Male
+                </option>
+
+                <option
+                    value="Female"
+                    {% if patient['gender'] == 'Female' %}selected{% endif %}>
+                    Female
+                </option>
+
+                <option
+                    value="Other"
+                    {% if patient['gender'] == 'Other' %}selected{% endif %}>
+                    Other
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="full">
+
+            <button
+                type="submit"
+                class="save-profile">
+
+                💾 Save Profile
+
+            </button>
+
+        </div>
+
+    </form>
+
+
+    <a
+        href="/"
+        class="back-btn">
+
+        ← Back to Dashboard
+
+    </a>
+
+</section>
+
+</div>
+
+</body>
+
+</html>
